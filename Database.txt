@@ -1,0 +1,539 @@
+
+Artificer:
+0,Acid Splash,1
+0,Create Bonfire,1
+0,Dancing Lights,0
+0,Fire Bolt,1
+0,Frostbite,1
+0,Guidance,0
+0,Light,0
+0,Mage Hand,0
+0,Magic Stone,1
+0,Mending,0
+0,Message,0
+0,Poison Spray,1
+0,Prestidigitation,0
+0,Ray of Frost,1
+0,Resistance,0
+0,Shocking Grasp,1
+0,Spare the Dying,0
+0,Thorn Whip,1
+0,Thunderclap,1
+1,Absorb Elements,0
+1,Alarm,0
+1,Catapult,1
+1,Cure Wounds,0
+1,Detect Magic,0
+1,Disguise Self,0
+1,Expeditious Retreat,0
+1,Faerie Fire,0
+1,False Life,0
+1,Feather Fall,0
+1,Grease,0
+1,Identify,0
+1,Jump,0
+1,Longstrider,0
+1,Purify Food and Drink,0
+1,Sanctuary,0
+1,Snare,0
+1,Distort Value,0
+2,Aid,0
+2,Alter Self,0
+2,Arcane Lock,0
+2,Blur,0
+2,Continual Flame,0
+2,Darkvision,0
+2,Enhance Ability,0
+2,Enlarge/Reduce,0
+2,Heat Metal,1
+2,Invisibility,0
+2,Lesser Restoration,0
+2,Levitate,0
+2,Magic Mouth,0
+2,Magic Weapon,1
+2,Protection from Poison,0
+2,Pyrotechnics,0
+2,Rope Trick,0
+2,See Invisibility,0
+2,Skywrite,0
+2,Spider Climb,0
+2,Web,0
+:
+Bard:
+0,Blade Ward,0
+0,Dancing Lights,0
+0,Friends,0
+0,Light,0
+0,Mage Hand,0
+0,Mending,0
+0,Message,0
+0,Minor Illusion,0
+0,Prestidigitation,0
+0,True Strike,0
+0,Vicious Mockery,1
+0,Thunderclap,1
+1,Animal Friendship,0
+1,Bane,0
+1,Charm Person,0
+1,Comprehend Languages,0
+1,Cure Wounds,0
+1,Detect Magic,0
+1,Disguise Self,0
+1,Dissonant Whispers,1
+1,Faerie Fire,0
+1,Feather Fall,0
+1,Healing Word,0
+1,Heroism,0
+1,Identify,0
+1,Illusory Script,0
+1,Longstrider,0
+1,Silent Image,0
+1,Sleep,0
+1,Speak with Animals,0
+1,Tasha’s Hideous Laughter,0
+1,Thunderwave,1
+1,Unseen Servant,0
+1,Earth Tremor,1
+2,Animal Messenger,0
+2,Blindness/Deafness,0
+2,Calm Emotions,0
+2,Cloud of Daggers,1
+2,Crown of Madness,0
+2,Detect Thoughts,0
+2,Enhance Ability,0
+2,Enthrall,0
+2,Heat Metal,1
+2,Hold Person,0
+2,Invisibility,0
+2,Knock,0
+2,Lesser Restoration,0
+2,Locate Animals or Plants,0
+2,Locate Object,0
+2,Magic Mouth,0
+2,Phantasmal Force,1
+2,See Invisibility,0
+2,Shatter,1
+2,Silence,0
+2,Suggestion,0
+2,Zone of Truth,0
+2,Pyrotechnics,0
+2,Skywrite,0
+2,Warding Wind,0
+2,Gift of Gab,0
+:
+Cleric:
+0,Guidance,0
+0,Light,0
+0,Mending,0
+0,Resistance,0
+0,Sacred Flame,1
+0,Spare the Dying,0
+0,Thaumaturgy,0
+0,Toll the Dead,1
+0,Word of Radiance,1
+1,Bane,0
+1,Bless,0
+1,Command,0
+1,Create or Destroy Water,0
+1,Cure Wounds,0
+1,Detect Evil and Good,0
+1,Detect Magic,0
+1,Detect Poison and Disease,0
+1,Guiding Bolt,1
+1,Healing Word,0
+1,Inflict Wounds,1
+1,Protection from Evil and Good,0
+1,Purify Food and Drink,0
+1,Sanctuary,0
+1,Shield of Faith,0
+1,Ceremony,0
+2,Aid,0
+2,Augury,0
+2,Blindness/Deafness,0
+2,Calm Emotions,0
+2,Continual Flame,0
+2,Enhance Ability,0
+2,Find Traps,0
+2,Gentle Repose,0
+2,Hold Person,0
+2,Lesser Restoration,0
+2,Locate Object ,0
+2,Prayer of Healing,0
+2,Protection from Poison,0
+2,Silence,0
+2,Spiritual Weapon,1
+2,Warding Bond,0
+2,Zone of Truth,0
+:
+Druid:
+0,Druidcraft,0
+0,Guidance,0
+0,Mending,0
+0,Poison Spray,1
+0,Produce Flame,1
+0,Resistance,0
+0,Shillelagh,1
+0,Thorn Whip,1
+0,Control Flames,0
+0,Create Bonfire,1
+0,Frostbite,1
+0,Gust,0
+0,Infestation,1
+0,Magic Stone,1
+0,Mold Earth,0
+0,Primal Savagery,1
+0,Shape Water,0
+0,Thunderclap,1
+1,Animal Friendship,0
+1,Charm Person,0
+1,Create or Destroy Water,0
+1,Cure Wounds,0
+1,Detect Magic,0
+1,Detect Poison and Disease,0
+1,Entangle,0
+1,Faerie Fire,0
+1,Fog Cloud,0
+1,Goodberry,0
+1,Healing Word,0
+1,Jump,0
+1,Longstrider,0
+1,Purify Food and Drink,0
+1,Speak with Animals,0
+1,Thunderwave,1
+1,Absorb Elements,0
+1,Beast Bond,0
+1,Earth Tremor,1
+1,Ice Knife,1
+1,Snare,0
+2,Animal Messenger,0
+2,Barkskin,0
+2,Beast Sense,0
+2,Darkvision,0
+2,Enhance Ability,0
+2,Find Traps,0
+2,Flame Blade,1
+2,Flaming Sphere,1
+2,Gust of Wind,0
+2,Heat Metal,1
+2,Hold Person,0
+2,Lesser Restoration,0
+2,Locate Animals or Plants,0
+2,Locate Object,0
+2,Moonbeam,1
+2,Pass without Trace,0
+2,Protection from Poison,0
+2,Spike Growth,1
+2,Dust Devil,1
+2,Earthbind,0
+2,Healing Spirit,0
+2,Skywrite,0
+2,Warding Wind,0
+:
+Paladin:
+1,Bless,0
+1,Command,0
+1,Compelled Duel,0
+1,Cure Wounds,0
+1,Detect Evil and Good,0
+1,Detect Magic,0
+1,Detect Poison and Disease,0
+1,Divine Favor,1
+1,Heroism,0
+1,Protection from Evil and Good,0
+1,Purify Food and Drink,0
+1,Searing Smite,1
+1,Shield of Faith,0
+1,Thunderous Smite,1
+1,Wrathful Smite,1
+1,Ceremony,0
+2,Aid,0
+2,Branding Smite,1
+2,Find Steed,0
+2,Lesser Restoration,0
+2,Locate Object,0
+2,Magic Weapon,1
+2,Protection from Poison,0
+2,Zone of Truth,0
+:
+Ranger:
+1,Alarm,0
+1,Animal Friendship,0
+1,Cure Wounds,0
+1,Detect Magic,0
+1,Detect Poison and Disease,0
+1,Ensnaring Strike,1
+1,Fog Cloud,0
+1,Goodberry,0
+1,Hail of Thorns,1
+1,Hunter’s Mark,1
+1,Jump,0
+1,Longstrider,0
+1,Speak with Animals,0
+1,Absorb Elements,0
+1,Beast Bond,0
+1,Snare,0
+1,Zephyr Strike,1
+2,Animal Messenger,0
+2,Barkskin,0
+2,Beast Sense,0
+2,Cordon of Arrows,1
+2,Darkvision,0
+2,Find Traps,0
+2,Lesser Restoration,0
+2,Locate Animals or Plants,0
+2,Locate Object,0
+2,Pass without Trace,0
+2,Protection from Poison,0
+2,Silence,0
+2,Spike Growth,1
+2,Healing Spirit,0
+:
+Sorcerer:
+0,Acid Splash,1
+0,Blade Ward,0
+0,Chill Touch,1
+0,Dancing Lights,0
+0,Fire Bolt,1
+0,Friends,0
+0,Light,0
+0,Mage Hand,0
+0,Mending,0
+0,Message,0
+0,Minor Illusion,0
+0,Poison Spray,1
+0,Prestidigitation,0
+0,Ray of Frost,1
+0,Shocking Grasp,1
+0,True Strike,0
+0,Control Flames,0
+0,Create Bonfire,1
+0,Frostbite,1
+0,Gust,0
+0,Infestation,1
+0,Mold Earth,0
+0,Shape Water,0
+0,Thunderclap,1
+0,Mind Sliver,1
+1,Burning Hands,1
+1,Charm Person,0
+1,Chromatic Orb,1
+1,Color Spray,0
+1,Comprehend Languages,0
+1,Detect Magic,0
+1,Disguise Self,0
+1,Expeditious Retreat,0
+1,False Life,0
+1,Feather Fall,0
+1,Fog Cloud,0
+1,Jump,0
+1,Mage Armor,0
+1,Magic Missile,1
+1,Ray of Sickness,1
+1,Shield,0
+1,Silent Image,0
+1,Sleep,0
+1,Thunderwave,1
+1,Witch Bolt,1
+1,Absorb Elements,0
+1,Catapult,1
+1,Chaos Bolt,1
+1,Earth Tremor,1
+1,Ice Knife,1
+1,Distort Value,0
+2,Alter Self,0
+2,Blindness/Deafness,0
+2,Blur,0
+2,Cloud of Daggers,1
+2,Crown of Madness,0
+2,Darkness,0
+2,Darkvision,0
+2,Detect Thoughts,0
+2,Enhance Ability,0
+2,Enlarge/Reduce,0
+2,Gust of Wind,0
+2,Hold Person,0
+2,Invisibility,0
+2,Knock,0
+2,Levitate,0
+2,Mirror Image,0
+2,Misty Step,0
+2,Phantasmal Force,1
+2,Scorching Ray,1
+2,See Invisibility,0
+2,Shatter,1
+2,Spider Climb,0
+2,Suggestion,0
+2,Web,0
+2,Aganazzar's Scorcher,1
+2,Dragon's Breath,1
+2,Dust Devil,1
+2,Earthbind,0
+2,Maximilian's Earthen Grasp,1
+2,Mind Spike,1
+2,Pyrotechnics,0
+2,Shadow Blade,1
+2,Sniloc's Snowball Storm,1
+2,Warding Wind,0
+:
+Warlock:
+0,Blade Ward,0
+0,Chill Touch,1
+0,Eldritch Blast,1
+0,Friends,0
+0,Mage Hand,0
+0,Minor Illusion,0
+0,Poison Spray,1
+0,Prestidigitation,0
+0,True Strike,0
+0,Create Bonfire,1
+0,Frostbite,1
+0,Infestation,1
+0,Magic Stone,1
+0,Thunderclap,1
+0,Toll the Dead,1
+0,Mind Sliver,1
+1,Armor of Agathys,1
+1,Arms of Hadar,1
+1,Charm Person,0
+1,Comprehend Languages,0
+1,Expeditious Retreat,0
+1,Hellish Rebuke,1
+1,Hex,1
+1,Illusory Script,0
+1,Protection from Evil and Good,0
+1,Unseen Servant,0
+1,Witch Bolt,1
+1,Cause Fear,0
+1,Distort Value,0
+2,Cloud of Daggers,1
+2,Crown of Madness,0
+2,Darkness,0
+2,Enthrall,0
+2,Hold Person,0
+2,Invisibility,0
+2,Mirror Image,0
+2,Misty Step,0
+2,Ray of Enfeeblement,0
+2,Shatter,1
+2,Spider Climb,0
+2,Suggestion,0
+2,Earthbind,0
+2,Mind Spike,1
+2,Shadow Blade,1
+2,Flock of Familiars,0
+:
+Wizard:
+0,Acid Splash,1
+0,Blade Ward,0
+0,Chill Touch,0
+0,Dancing Lights,0
+0,Fire Bolt,1
+0,Friends,0
+0,Light,0
+0,Mage Hand,0
+0,Mending,0
+0,Message,0
+0,Minor Illusion,0
+0,Poison Spray,1
+0,Prestidigitation,0
+0,Ray of Frost,1
+0,Shocking Grasp,1
+0,True Strike,0
+0,Control Flames,0
+0,Create Bonfire,1
+0,Frostbite,1
+0,Gust,0
+0,Infestation,1
+0,Mold Earth,0
+0,Shape Water,0
+0,Thunderclap,1
+0,Toll the Dead,1
+0,Encode Thoughts,0
+0,Mind Sliver,1
+1,Alarm,0
+1,Burning Hands,1
+1,Charm Person,0
+1,Chromatic Orb,1
+1,Color Spray,0
+1,Comprehend Languages,0
+1,Detect Magic,0
+1,Disguise Self,0
+1,Expeditious Retreat,0
+1,False Life,0
+1,Feather Fall,0
+1,Find Familiar,0
+1,Fog Cloud,0
+1,Grease,0
+1,Identify,0
+1,Illusory Script,0
+1,Jump,0
+1,Longstrider,0
+1,Mage Armor,0
+1,Magic Missile,1
+1,Protection from Evil and Good,0
+1,Ray of Sickness,1
+1,Shield,0
+1,Silent Image,0
+1,Sleep,0
+1,Tasha’s Hideous Laughter,0
+1,Tenser’s Floating Disk,0
+1,Thunderwave,1
+1,Unseen Servant,0
+1,Witch Bolt,1
+1,Absorb Elements,0
+1,Catapult,1
+1,Cause Fear,0
+1,Earth Tremor,1
+1,Ice Knife,1
+1,Snare,0
+1,Distort Value,0
+1,Jim's Magic Missile,1
+2,Alter Self,0
+2,Arcane Lock,0
+2,Blindness/Deafness,0
+2,Blur,0
+2,Cloud of Daggers,1
+2,Continual Flame,0
+2,Crown of Madness,0
+2,Darkness,0
+2,Darkvision,0
+2,Detect Thoughts,0
+2,Enlarge/Reduce,0
+2,Flaming Sphere,1
+2,Gentle Repose,0
+2,Gust of Wind,0
+2,Hold Person,0
+2,Invisibility,0
+2,Knock,0
+2,Levitate,0
+2,Locate Object,0
+2,Magic Mouth,0
+2,Magic Weapon,1
+2,Melf’s Acid Arrow,1
+2,Mirror Image,0
+2,Misty Step,0
+2,Nystul’s Magic Aura,0
+2,Phantasmal Force,1
+2,Ray of Enfeeblement,0
+2,Rope Trick,0
+2,Scorching Ray,1
+2,See Invisibility,0
+2,Shatter,1
+2,Spider Climb,0
+2,Suggestion,0
+2,Web,0
+2,Aganazzar's Scorcher,1
+2,Dragon's Breath,1
+2,Dust Devil,1
+2,Earthbind,0
+2,Maximilian's Earthen Grasp,1
+2,Mind Spike,1
+2,Pyrotechnics,0
+2,Shadow Blade,1
+2,Skywrite,0
+2,Sniloc's Snowball Storm,1
+2,Warding Wind,0
+2,Gift of Gab,0
+2,Jim's Glowing Coin,0
+2,Flock of Familiars,0
+:
