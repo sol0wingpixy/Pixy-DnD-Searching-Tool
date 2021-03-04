@@ -58,6 +58,21 @@ Artificer:
 2,Skywrite
 2,Spider Climb
 2,Web
+3,Blink
+3,Catnap
+3,Create Food and Water
+3,Dispel Magic
+3,Elemental Weapon,1
+3,Flame Arrows,1
+3,Fly
+3,Glyph of Warding
+3,Haste
+3,Intellect Fortress
+3,Protection from Energy
+3,Revivify
+3,Tiny Servant
+3,Water Breathing
+3,Water Walk
 :
 Bard:
 0,Blade Ward
@@ -120,6 +135,27 @@ Bard:
 2,Skywrite
 2,Warding Wind
 2,Gift of Gab
+3,Bestow Curse
+3,Catnap
+3,Clairvoyance
+3,Dispel Magic
+3,Enemies Abound
+3,Fast Friends
+3,Fear
+3,Feign Death
+3,Glyph of Warding
+3,Hypnotic Pattern
+3,Intellect Fortress
+3,Tiny Hut
+3,Major Image
+3,Motivational Speech
+3,Nondetection
+3,Plant Growth
+3,Sending
+3,Speak with Dead
+3,Speak with Plants
+3,Stinking Cloud
+3,Tongues
 :
 Cleric:
 0,Guidance
