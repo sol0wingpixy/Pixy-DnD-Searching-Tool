@@ -27,6 +27,7 @@ public class Spellbase
       //*
       outputToFile(spellList);
       //*/
+      System.out.println("Time to do things!");
    }
    
    public static void readFromFile(ArrayList<Spell> spellList)
@@ -68,7 +69,7 @@ public class Spellbase
    {
       try
       {
-         File input = new File("spell-pages/spell-page"+num+".html");
+         File input = new File("src/spell-pages/spell-page"+num+".html");
          Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
          Element curr = doc.child(0).child(1).child(0);
          
