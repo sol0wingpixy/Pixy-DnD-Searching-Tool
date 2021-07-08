@@ -14,7 +14,7 @@ public class Spellbase
 		
 		Scanner input = new Scanner(System.in);
 		System.out.println("Read New Data? (y/n)");
-		if(input.nextLine().equals("y"))
+		if(/*input.nextLine().equals("y")*/false)
 		{
 			for(int i = 1; i <= 26; i++)
 			{

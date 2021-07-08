@@ -9,6 +9,7 @@ public class MainMenuFrame extends JFrame {
 		setSize(500,500);
 		setVisible(true);
 		setTitle("Pixy's Spell Searcher");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		JList<Spell> displayList = new JList(spellList.toArray());
 		JScrollPane scrollPane = new JScrollPane(displayList);
 		add(scrollPane);
@@ -21,7 +22,7 @@ public class MainMenuFrame extends JFrame {
 		          }
 		     }
 		 };
-		 displayList.addMouseListener(mouseListener);
+		displayList.addMouseListener(mouseListener);
 		System.out.println(getComponents()[0]);
 	}
 }
