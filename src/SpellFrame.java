@@ -9,14 +9,8 @@ public class SpellFrame extends JFrame {
 	public SpellFrame(Spell spell) {
 		setSize(500,500);
 		setVisible(true);
+		setTitle(spell.name);
 		spellPanel = new SpellPanel(spell);
-		spellPanel.setBounds(0, 0, WIDTH, HEIGHT);
 		getContentPane().add(spellPanel);
-		this.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentResized(ComponentEvent e) {
-				spellPanel.setBounds(0, 0, WIDTH, HEIGHT);
-			}
-		});
 	}
 }

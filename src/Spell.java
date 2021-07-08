@@ -61,4 +61,32 @@ public class Spell implements Serializable
 	{
 		return name;
 	}
+	public String outputLevel()
+	{
+		switch(level)
+		{
+		case 0:
+			return "Cantrip";
+		case 1:
+			return "1st Level";
+		case 2:
+			return "2nd Level";
+		case 3:
+			return "3rd Level";
+		case 4:
+			return "4th Level";
+		case 5:
+			return "5th Level";
+		case 6:
+			return "6th Level";
+		case 7:
+			return "7th Level";
+		case 8:
+			return "8th Level";
+		case 9:
+			return "9th Level";
+		default:
+			return "Invalid Level";
+		}
+	}
 }
