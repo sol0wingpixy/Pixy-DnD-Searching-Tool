@@ -1,7 +1,10 @@
 import org.jsoup.nodes.*;
-import java.io.*;
 
-public class Spell implements Serializable
+import java.util.List;
+import java.io.*;
+import java.util.ArrayList;
+
+public class Spell implements Serializable, Comparable
 {
 	private static final long serialVersionUID = 1L;
 	public String name;
@@ -21,6 +24,7 @@ public class Spell implements Serializable
 	public String attackSave;//string
 	public String damageEffect;//string
 	public String text;//string
+	public List<Class> classes;
 	public Spell(String n,Element el)
 	{
 		if(ritual = n.endsWith("Ritual"))
@@ -55,8 +59,34 @@ public class Spell implements Serializable
 		text = el.child(0).child(2).text();
 		if(block.child(3).child(1).child(0).text().contains("*"))
 			mComponents = text.substring(text.indexOf("* - (")+5,text.length()-1);
+		classes = new ArrayList<Class>();
+		Element classPar = el.child(1).child(2);
+		if(!classPar.text().contains("Classes"))
+		{
+			classPar = el.child(1).child(1);
+		}
+		for(Element i:classPar.children())
+		{
+			Class c = Class.toClass(i.text());
+			if(c!=null) {
+				classes.add(c);
+			}
+				
+		}
 	}
 
+	public int compareTo(Object o)
+	{
+		if(o instanceof Spell)
+		{
+			Spell s = (Spell)o;
+			int levelDif = ((this.level*100)+100)-((s.level*100)+100);
+			int alphaDif = this.name.charAt(0)-s.name.charAt(0);
+			return levelDif+alphaDif;
+		}
+		return 0;
+	}
+	
 	public String toString()
 	{
 		return name;

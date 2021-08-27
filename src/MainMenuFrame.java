@@ -5,31 +5,33 @@ import java.util.*;
 
 import javax.swing.*;
 
-public class MainMenuFrame extends JFrame {
+public class MainMenuFrame extends JFrame implements ActionListener {
+	
+	JPanel listPane;
+	JList<Spell> displayList;
 	
 	public MainMenuFrame(ArrayList<Spell> spellList) {
-
-		this.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
 		
-		JList<Spell> displayList = new JList(spellList.toArray());
+		listPane = new JPanel();
+		listPane.setLayout(new BoxLayout(listPane,BoxLayout.X_AXIS));
+		
+		displayList = new JList(spellList.toArray());
 		
 		JScrollPane scrollPane = new JScrollPane(displayList);
-		c.gridx = 0;
-		c.gridy = 0;
-		c.weighty = 1;
-		c.fill = GridBagConstraints.VERTICAL;
-		add(scrollPane,c);
+		listPane.add(scrollPane);
 		
 		SpellPanel spellPanel = new SpellPanel(displayList.getModel().getElementAt(0));
-		c.gridx = 1;
-		add(spellPanel,c);
+		listPane.add(spellPanel);
+		
+		ButtonPanel buttonPanel = new ButtonPanel(this);
+		listPane.add(buttonPanel);
 		
 		MouseListener mouseListener = new MouseAdapter() {
 		     public void mouseClicked(MouseEvent e) {
 	             int index = displayList.locationToIndex(e.getPoint());
 		         if (e.getClickCount() == 2) {
-		             new SpellFrame(displayList.getModel().getElementAt(index));
+		             listPane.remove(1);
+		        	 listPane.add(new SpellPanel(displayList.getModel().getElementAt(index)));
 		          }
 		         if (e.getClickCount() == 1) {
 		        	 System.out.println(getComponentCount());
@@ -37,10 +39,18 @@ public class MainMenuFrame extends JFrame {
 		     }
 		 };
 		displayList.addMouseListener(mouseListener);
+		
+		this.add(listPane);
+		
 		setVisible(true);
 		setSize(900,500);
 		setTitle("Pixy's Spell Searcher");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
    	 	System.out.println(getComponentCount());
+	}
+	public void actionPerformed(ActionEvent e)
+	{
+		displayList.removeAll();
+		this.repaint();
 	}
 }
