@@ -1,8 +1,7 @@
 import org.jsoup.nodes.*;
 
-import java.util.List;
+import java.util.*;
 import java.io.*;
-import java.util.ArrayList;
 
 public class Spell implements Serializable, Comparable
 {

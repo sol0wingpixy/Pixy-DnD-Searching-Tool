@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Spellbase
 {
-	private static final String FILENAME = "DatabaseSerial.txt";
+	private static final String FILENAME = "SpellDatabaseSerial.txt";
 	
 	private static Scanner input;
 	
