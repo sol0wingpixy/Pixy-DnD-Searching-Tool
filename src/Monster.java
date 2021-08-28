@@ -92,7 +92,15 @@ public class Monster implements Serializable {
 			for (int i = 0; i < bigInfo.child(0).child(0).child(4).childrenSize() - 1; i++) {
 				tidbitsParsing(bigInfo.child(0).child(0).child(4).child(i));
 			}
-
+			if(saves == null) {
+				saves = new int[6];
+				for(int i=0; i<stats.length; i++) {
+					tempInt = stats[i]-10;
+					if(tempInt < 0)
+						tempInt--;
+					saves[i] = tempInt/2;
+				}
+			}
 			for (int i = 0; i < bigInfo.child(0).child(0).child(6).childrenSize(); i++) {
 				if (bigInfo.child(0).child(0).child(6).child(i).child(0).text().equals("Actions")) {
 					tempString = bigInfo.child(0).child(0).child(6).child(i).child(1).text();
@@ -111,12 +119,13 @@ public class Monster implements Serializable {
 			saves = new int[6];
 			String[] split = curr.child(1).text().split(",");
 			int ptr = 0;
+			int temp;
 			for(int i = 0; i<saves.length; i++) {
-				if(ptr >= split.length && split[ptr].contains(Monster.statNames[i])) {
+				if(ptr < split.length && split[ptr].contains(Monster.statNames[i])) {
 					saves[i] = Integer.parseInt(split[ptr].substring(split[ptr].length()-1,split[ptr].length()));
 					ptr++;
 				} else {
-					int temp = stats[i]-10;
+					temp = stats[i]-10;
 					if(temp < 0)
 						temp--;
 					saves[i] = temp/2;

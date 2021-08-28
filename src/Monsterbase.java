@@ -26,7 +26,16 @@ public class Monsterbase
 		{
 			monsterList=readFromFile();
 		}
-		
+		double avgWisSave = 0;
+		for(int i=0; i<monsterList.size(); i++)
+		{
+			if(monsterList.get(i).hasInfo && monsterList.get(i).cr <= 5) {
+				System.out.println(monsterList.get(i).name + " : " + monsterList.get(i).saves[4]);
+				avgWisSave += monsterList.get(i).saves[4];
+			}
+		}
+		avgWisSave /= monsterList.size();
+		System.out.println("Avg wis save: " + avgWisSave);
 		outputToFile(monsterList);
 		System.out.println("didn't break");
 	}
