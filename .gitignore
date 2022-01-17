@@ -3,3 +3,4 @@ DatabaseSerial.txt
 *.html
 MonsterDatabaseSerial.txt
 SpellDatabaseSerial.txt
+*.class
