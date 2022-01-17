@@ -1,3 +1,5 @@
 DatabaseSerial.txt
-src/spell-pages/
+/src/spell-pages/
 *.html
+MonsterDatabaseSerial.txt
+SpellDatabaseSerial.txt

@@ -30,6 +30,8 @@ public class Monsterbase
 			monsterList=readFromFile();
 		}
 		
+		outputToFile(monsterList);
+
 		displayAC(monsterList,11,11);
 		
 		monsterList = filterBy(monsterList,"hasInfo","True");
@@ -51,7 +53,6 @@ public class Monsterbase
 		{
 			System.out.println("- "+m.name + " | " +m.size +", CR:"+m.cr+", HP:"+convertHP(m)+", DPRtoHit:"+avgDmgToHit(m)+", AdjHP:"+avgHPAC(m));
 		}
-		outputToFile(monsterList);
 	}
 
 	private static List<Monster> sortBy(List<Monster> monsterList, String sortType, String sorter)
