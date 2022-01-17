@@ -4,3 +4,5 @@ DatabaseSerial.txt
 MonsterDatabaseSerial.txt
 SpellDatabaseSerial.txt
 *.class
+.DS_Store
+.DS_Store?
