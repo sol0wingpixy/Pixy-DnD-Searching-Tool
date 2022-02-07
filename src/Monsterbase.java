@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 public class Monsterbase
 {
 	private static final String FILENAME = "MonsterDatabaseSerial.txt";
+	
+	private static List<String> outputVars;
+	
+	private static List<Monster> refMonsterList;
 
 	private static Scanner input;
 	private static final int BASECR = 2;
@@ -30,20 +34,27 @@ public class Monsterbase
 			monsterList=readFromFile();
 		}
 		
+		refMonsterList = new ArrayList<Monster>(monsterList);
+		
+		outputVars = new ArrayList<String>();
+		
 		outputToFile(monsterList);
 
-		displayAC(monsterList,11,11);
+		//displayAC(monsterList,11,11);
 		
 		monsterList = filterBy(monsterList,"hasInfo","True");
-		monsterList = filterBy(monsterList,"Type","Beast");
+		monsterList = filterBy(monsterList,"Type","Fey");
+		monsterList = addToList(monsterList,"Type","Beast");
 		monsterList = filterBy(monsterList,"Trim","Swarm of");
 		monsterList = filterBy(monsterList,"CR","-4 2");
 		//monsterList = filterBy(monsterList,"SearchSpeed","swim");
 		//monsterList = sortBy(monsterList,"Hybrid","Dec");
 		//monsterList = sortBy(monsterList,"AvgDmgAdj","Dec");
+		//monsterList = sortBy(monsterList,"AvgDmg","Dec");
 		//monsterList = sortBy(monsterList,"AvgDmgToHit","Dec");
-		monsterList = sortBy(monsterList,"ConAniHP","Dec");
-		monsterList = sortBy(monsterList, "Size","Dec");
+		//monsterList = sortBy(monsterList,"ConAniHP","Dec");
+		monsterList = sortBy(monsterList,"ConAniHPBig","Dec");
+		//monsterList = sortBy(monsterList, "Size","Dec");
 		//monsterList = sortBy(monsterList, "HPAC","Dec");
 		//monsterList = sortBy(monsterList,"toHit","Asc");
 		//monsterList = sortBy(monsterList,"HPSaves","Dec");
@@ -51,12 +62,59 @@ public class Monsterbase
 		//monsterList = filterBy(monsterList,"Search","magic");
 		for(Monster m : monsterList)
 		{
-			System.out.println("- "+m.name + " | " +m.size +", CR:"+m.cr+", HP:"+convertHP(m)+", DPRtoHit:"+avgDmgToHit(m)+", AdjHP:"+avgHPAC(m));
+			String out = "- "+m.name;
+			if(outputVars.contains("ConAniHP"))
+			{
+				out += " | ConAniHP:" + convertHP(m);
+			}
+			if(outputVars.contains("HPSaves"))
+			{
+				out += " | HPSaves:" + convertHP(m);
+			}
+			if(outputVars.contains("HPAC"))
+			{
+				out += " | HPAC:" + avgHPAC(m);
+			}
+			if(outputVars.contains("toHit"))
+			{
+				out += " | toHit:" + m.toHitMod;
+			}
+			if(outputVars.contains("AvgDmg"))
+			{
+				out += " | AvgDmg:" + m.avgDamage;
+			}
+			if(outputVars.contains("CR"))
+			{
+				out += " | CR:" + m.cr;
+			}
+			if(outputVars.contains("Size"))
+			{
+				out += " | Size:" + m.size;
+			}
+			if(outputVars.contains("AvgDmgAdj"))
+			{
+				out += " | AvgDmgAdj:" + convertAvgDmg(m);
+			}
+			if(outputVars.contains("AvgDmgToHit"))
+			{
+				out += " | AvgDmgToHit:" + convertAvgDmg(m);
+			}
+			if(outputVars.contains("Hybrid"))
+			{
+				out += " | HybridAvg:" + HybridAvg(m);
+			}
+			if(outputVars.contains("ConAniHPBig"))
+			{
+				out += " | ConAniHPBig:" + ConAniHPBig(m);
+			}
+			
+			System.out.println(out);
 		}
 	}
 
 	private static List<Monster> sortBy(List<Monster> monsterList, String sortType, String sorter)
 	{
+		outputVars.add(sortType);
 		switch(sortType)
 		{
 		case "ConAniHP":
@@ -119,9 +177,21 @@ public class Monsterbase
 			else
 				monsterList = monsterList.stream().sorted((m1,m2) -> HybridAvg(m1).compareTo(HybridAvg(m2))).collect(Collectors.toList());
 			return monsterList;
+		case "ConAniHPBig":
+			if(sorter.equals("Dec"))
+				monsterList = monsterList.stream().sorted((m1,m2) -> ConAniHPBig(m2).compareTo(ConAniHPBig(m1))).collect(Collectors.toList());
+			else
+				monsterList = monsterList.stream().sorted((m1,m2) -> ConAniHPBig(m1).compareTo(ConAniHPBig(m2))).collect(Collectors.toList());
+			return monsterList;
 		default:
 			return monsterList;
 		}
+	}
+	
+	public static Integer ConAniHPBig(Monster m)
+	{
+		int totalHP = convertHP(m);
+		return totalHP * (1+(m.hp/25));
 	}
 	
 	public static Double HybridAvg(Monster m)
@@ -191,6 +261,20 @@ public class Monsterbase
 		return result;
 	}
 
+	private static List<Monster> addToList(List<Monster> monsterList, String addType, String addText)
+	{
+		List<Monster >tempMonsterList = new ArrayList<>(refMonsterList);
+		switch(addType)
+		{
+		case "Type":
+			tempMonsterList = tempMonsterList.stream().filter(m -> m.type == Type.toType(addText)).collect(Collectors.toList());
+			monsterList.addAll(tempMonsterList);
+			return monsterList;
+		default:
+			return monsterList;
+		}
+	}
+	
 	private static List<Monster> filterBy(List<Monster> monsterList, String filterType, String filter)
 	{
 		switch(filterType)
