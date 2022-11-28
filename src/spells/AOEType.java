@@ -1,3 +1,4 @@
+package spells;
 
 public enum AOEType {
 	Line,

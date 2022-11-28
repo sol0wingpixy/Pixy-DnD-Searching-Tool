@@ -1,3 +1,4 @@
+package spells;
 
 public enum School {
 	Abjuration,

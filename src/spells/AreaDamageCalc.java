@@ -1,3 +1,4 @@
+package spells;
 import java.util.Scanner;
 
 public class AreaDamageCalc {

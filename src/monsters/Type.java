@@ -1,3 +1,4 @@
+package monsters;
 
 public enum Type {
 	Aberration,

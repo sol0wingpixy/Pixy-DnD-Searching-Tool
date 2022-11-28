@@ -1,3 +1,4 @@
+package spells;
 
 public enum Class {
 	Artificer,
@@ -8,7 +9,8 @@ public enum Class {
 	Ranger,
 	Sorcerer,
 	Warlock,
-	Wizard;
+	Wizard,
+	NA;
 	
 	public static Class toClass(String s)
 	{

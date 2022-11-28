@@ -1,6 +1,9 @@
+package graphics;
 import java.awt.Font;
 
 import javax.swing.*;
+
+import spells.Spell;
 
 public class SpellPanel extends JPanel {
 	
@@ -21,7 +24,7 @@ public class SpellPanel extends JPanel {
 	{
 		listPane.removeAll();
 		
-		JTextArea titleText = new JTextArea(spell.name);
+		JTextArea titleText = new JTextArea(spell.name.getContentString());
 		titleText.setVisible(true);
 		titleText.setLineWrap(true);
 		titleText.setWrapStyleWord(true);

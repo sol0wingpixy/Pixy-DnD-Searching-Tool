@@ -1,16 +1,19 @@
-import org.jsoup.nodes.*;
+package spells;
 
+import org.jsoup.nodes.*;
 import java.util.*;
 import java.io.*;
+import universal.*;
 
-public class Spell implements Serializable, Comparable
+
+public class Spell implements Serializable, Comparable<Spell>
 {
 	private static final long serialVersionUID = 1L;
-	public String name;
+	public IndexedItem name;
 	public boolean ritual;
 	public boolean concentration;
 	public School school;
-	public int level;
+	public IndexedItem level;
 	public boolean hasV;
 	public boolean hasS;
 	public boolean hasM;
@@ -23,7 +26,7 @@ public class Spell implements Serializable, Comparable
 	public String attackSave;//string
 	public String damageEffect;//string
 	public String text;//string
-	public List<Class> classes;
+	public IndexedItem classes;
 	public Spell(String n,Element el)
 	{
 		if(ritual = n.endsWith("Ritual"))
@@ -34,12 +37,13 @@ public class Spell implements Serializable, Comparable
 		{
 			n = n.substring(0, n.length()-14);
 		}
-		name = n;
+		name = new IndexedItem (n,IndexKind.SpellName);
 		Element block = el.child(0).child(0);
 		if(block.child(0).child(1).text().equals("Cantrip"))
-			level = 0;
+			level = new IndexedItem(0,IndexKind.SpellLevel);
 		else
-			level = Integer.parseInt(block.child(0).child(1).text().substring(0, 1));
+			level = new IndexedItem(Integer.parseInt(block.child(0).child(1).text().substring(0, 1))
+					,IndexKind.SpellLevel);
 		castTime = block.child(1).child(1).text();
 		range = block.child(2).child(1).text();
 		if(block.child(2).child(1).childrenSize()>0)
@@ -58,7 +62,7 @@ public class Spell implements Serializable, Comparable
 		text = el.child(0).child(2).text();
 		if(block.child(3).child(1).child(0).text().contains("*"))
 			mComponents = text.substring(text.indexOf("* - (")+5,text.length()-1);
-		classes = new ArrayList<Class>();
+		List<Class> tempClasses = new ArrayList<Class>();
 		Element classPar = el.child(1).child(2);
 		if(!classPar.text().contains("Classes"))
 		{
@@ -68,31 +72,27 @@ public class Spell implements Serializable, Comparable
 		{
 			Class c = Class.toClass(i.text());
 			if(c!=null) {
-				classes.add(c);
-			}
-				
+				tempClasses.add(c);
+			}	
 		}
+		classes = new IndexedItem(tempClasses,IndexKind.SpellClasses);
 	}
 
-	public int compareTo(Object o)
+	
+	public int compareTo(Spell s)
 	{
-		if(o instanceof Spell)
-		{
-			Spell s = (Spell)o;
-			int levelDif = ((this.level*100)+100)-((s.level*100)+100);
-			int alphaDif = this.name.charAt(0)-s.name.charAt(0);
-			return levelDif+alphaDif;
-		}
-		return 0;
+		int levelDif = ((this.level.getContentInt()*100)+100)-((s.level.getContentInt()*100)+100);
+		int alphaDif = this.name.getContentString().charAt(0)-s.name.getContentString().charAt(0);
+		return levelDif+alphaDif;
 	}
 	
 	public String toString()
 	{
-		return name;
+		return name.getContentString();
 	}
 	public String outputLevel()
 	{
-		switch(level)
+		switch(level.getContentInt())
 		{
 		case 0:
 			return "Cantrip";

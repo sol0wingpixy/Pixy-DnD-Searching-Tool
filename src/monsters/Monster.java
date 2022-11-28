@@ -1,3 +1,5 @@
+package monsters;
+
 import org.jsoup.nodes.*;
 import java.util.*;
 import java.io.*;

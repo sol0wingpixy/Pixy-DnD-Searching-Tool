@@ -1,5 +1,9 @@
+package spells;
 import org.jsoup.*;
 import org.jsoup.nodes.*;
+
+import universal.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -8,26 +12,26 @@ public class Spellbase
 	private static final String FILENAME = "SpellDatabaseSerial.txt";
 	
 	private static Scanner input;
-	private static ArrayList<Spell> spellList;
+	private static ArrayList<Spell> masterSpellList;
 	
 	public static void main(String[] args)
 	{
-		spellList = new ArrayList<Spell>();
+		masterSpellList = new ArrayList<Spell>();
 		//Reading new Data:
 		
 		input = new Scanner(System.in);
 		//System.out.println("Read New Data? (y/n)");
-		if(/*input.nextLine().equals("y")*/false)
+		if(/*input.nextLine().equals("y")*/true)
 		{
 			for(int i = 1; i <= 26; i++)
 			{
-				extractSpells(i,spellList);
+				extractSpells(i,masterSpellList);
 			}
-			outputToFile(spellList);
+			outputToFile(masterSpellList);
 		}
 		else
 		{
-			spellList=readFromFile();
+			masterSpellList=readFromFile();
 		}
 		
 		
@@ -39,9 +43,10 @@ public class Spellbase
 		//List<Spell> outList = new ArrayList<Spell>(spellList);
 		//outList = addAllClass(outList,Class.Cleric);
 		//outList = onlyNotClass(outList,Class.Wizard);
-		outList = addAllLevel(outList,new Integer[] {1});
-		outList = onlyNoAttackSave(outList);
-		outList = onlyClass(outList,Class.Wizard);
+//		outList = addAllLevel(outList,new Integer[] {1});
+//		outList = onlyNoAttackSave(outList);
+//		outList = onlyClass(outList,Class.Wizard);
+		outList = addAllIndex(outList,new IndexedItem(Class.Artificer,IndexKind.SpellClass));
 		Collections.sort(outList);
 		printSpells(outList);
 		
@@ -70,33 +75,49 @@ public class Spellbase
 	
 	private static void printSpells(List<Spell> out)
 	{
+		if(out.size()<1)
+		{
+			System.out.println("Found no spells.");
+			return;
+		}
 		int oldLevel = -1;
 		for(int i=0;i<out.size();i++)
 		{
 			Spell s = out.get(i);
-			if(s.level!=oldLevel)
+			if(s.level.getContentInt()!=oldLevel)
 			{
-				oldLevel = s.level;
+				oldLevel = s.level.getContentInt();
 				System.out.println(s.outputLevel()+":");
 			}
 			System.out.println("- "+s);
 		}
 	}
 	
+	private static List<Spell> addAllIndex(List<Spell> curr,IndexedItem i)
+	{
+		List<Spell> temp = new ArrayList<Spell>();
+		for(Spell s:masterSpellList)
+		{
+			if(i.hasIndex(s)&&!curr.contains(s))
+				temp.add(s);
+		}
+		return temp;
+	}
+	
 	private static List<Spell> addAllClass(List<Spell> curr,Class c)
 	{
 		List<Spell> temp = new ArrayList<Spell>();
-		for(Spell s:spellList)
+		for(Spell s:masterSpellList)
 		{
-			if(s.classes.contains(c)&&!curr.contains(s))
-				temp.add(s);
+//			if(s.classes.contains(c)&&!curr.contains(s))
+//				temp.add(s);
 		}
 		return temp;
 	}
 	private static List<Spell> addAllLevel(List<Spell> curr, Integer[] levels)
 	{
 		List<Spell> temp = new ArrayList<Spell>();
-		for(Spell s:spellList)
+		for(Spell s:masterSpellList)
 		{
 			if(Arrays.asList(levels).contains(s.level)&&!curr.contains(s))
 				temp.add(s);
@@ -108,8 +129,8 @@ public class Spellbase
 		List<Spell> temp = new ArrayList<Spell>();
 		for(Spell s:curr)
 		{
-			if(!s.classes.contains(c))
-				temp.add(s);
+//			if(!s.classes.contains(c))
+//				temp.add(s);
 		}
 		return temp;
 	}
@@ -118,8 +139,8 @@ public class Spellbase
 		List<Spell> temp = new ArrayList<Spell>();
 		for(Spell s:curr)
 		{
-			if(s.classes.contains(c))
-				temp.add(s);
+//			if(s.classes.contains(c))
+//				temp.add(s);
 		}
 		return temp;
 	}

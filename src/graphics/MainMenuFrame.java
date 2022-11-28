@@ -1,9 +1,14 @@
+package graphics;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
+
+import spells.Spell;
+import graphics.SpellPanel;
 
 public class MainMenuFrame extends JFrame implements ActionListener {
 	
