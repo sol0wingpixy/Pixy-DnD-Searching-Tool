@@ -14,7 +14,7 @@ public class Monster implements Serializable {
 	public Type type;
 	public String source;
 	public String size;// Enum?
-	public String subtype;
+	public String subtype = "";
 	public int ac;
 	public int hp;
 	public int hdCount;
@@ -25,8 +25,8 @@ public class Monster implements Serializable {
 	public String skills;// split it up
 	public String dmgVul;
 	public String dmgRes;
-	public String dmgImm;
-	public String condImm; // fix all these?
+	public String dmgImm = "";
+	public String condImm = ""; // fix all these?
 	public String senses;
 	public String languages;
 	public boolean hasToHit;
@@ -202,9 +202,22 @@ public class Monster implements Serializable {
 			System.out.println("Add this to Monster.java: " + curr.child(0).text() + ", from: " + name);
 		}
 	}
+	
 	public String toString()
 	{
 		return name + " (CR:" + cr + ", HP:" + Monsterbase.convertHP(this) + ", DPRtoHit: " + Monsterbase.avgDmgToHit(this) + ")\n";
+	}
+	
+	public boolean equals(Object o)
+	{
+		if(o instanceof Monster)
+		{
+			Monster m = (Monster)o;
+			return this.name.equals(m.name);
+		}
+		
+			return o.equals(this);
+		
 	}
 	
 	public Integer sizeNumber()

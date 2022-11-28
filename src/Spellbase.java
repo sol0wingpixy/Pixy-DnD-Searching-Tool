@@ -8,60 +8,72 @@ public class Spellbase
 	private static final String FILENAME = "SpellDatabaseSerial.txt";
 	
 	private static Scanner input;
+	private static ArrayList<Spell> spellList;
 	
 	public static void main(String[] args)
 	{
-		ArrayList<Spell> spellList = new ArrayList();
+		spellList = new ArrayList<Spell>();
 		//Reading new Data:
 		
 		input = new Scanner(System.in);
 		//System.out.println("Read New Data? (y/n)");
-		if(/*input.nextLine().equals("y")*/true)
+		if(/*input.nextLine().equals("y")*/false)
 		{
 			for(int i = 1; i <= 26; i++)
 			{
 				extractSpells(i,spellList);
 			}
+			outputToFile(spellList);
 		}
 		else
 		{
 			spellList=readFromFile();
 		}
 		
-		outputToFile(spellList);
+		
 		
 		//MainMenuFrame mainMenuFrame = new MainMenuFrame(spellList);
-		while(ioLoop(spellList))
-		{}
+		//while(ioLoop(spellList))
+		//{}
+		List<Spell> outList = new ArrayList<Spell>();
+		//List<Spell> outList = new ArrayList<Spell>(spellList);
+		//outList = addAllClass(outList,Class.Cleric);
+		//outList = onlyNotClass(outList,Class.Wizard);
+		outList = addAllLevel(outList,new Integer[] {1});
+		outList = onlyNoAttackSave(outList);
+		outList = onlyClass(outList,Class.Wizard);
+		Collections.sort(outList);
+		printSpells(outList);
+		
 	}
 
-	public static boolean ioLoop(List<Spell> spellList) {
-		List<Spell> curr = new ArrayList<Spell>();
-		int addClass; 
-		do {
-			addClass = getResponse("Choose which classes to add.",Class.classesAsString());
-			if(addClass !=0)
-				curr = addAllClass(curr,spellList,Class.toClass(addClass));
-		} while (addClass!=0);
-		int subClass;
-		do {
-			subClass = getResponse("Choose which classes to subtract.",Class.classesAsString());
-			if(subClass !=0)
-				curr = subAllClass(curr,Class.toClass(subClass));
-		} while (subClass!=0);
-		//sort
-		Collections.sort(curr);
-		printSpells(curr);
-		int doLoop = getResponse("Go again?",new String[] {"Yes"});
-		return doLoop==1;
-	}
+//	public static boolean ioLoop(List<Spell> spellList) {
+//		List<Spell> curr = new ArrayList<Spell>();
+//		int addClass; 
+//		do {
+//			addClass = getResponse("Choose which classes to add.",Class.classesAsString());
+//			if(addClass !=0)
+//				curr = addAllClass(curr,spellList,Class.toClass(addClass));
+//		} while (addClass!=0);
+//		int subClass;
+//		do {
+//			subClass = getResponse("Choose which classes to subtract.",Class.classesAsString());
+//			if(subClass !=0)
+//				curr = subAllClass(curr,Class.toClass(subClass));
+//		} while (subClass!=0);
+//		//sort
+//		Collections.sort(curr);
+//		printSpells(curr);
+//		int doLoop = getResponse("Go again?",new String[] {"Yes"});
+//		return doLoop==1;
+//	}
 	
-	private static void printSpells(List<Spell> spellList)
+	private static void printSpells(List<Spell> out)
 	{
 		int oldLevel = -1;
-		for(int i=0;i<spellList.size();i++)
+		for(int i=0;i<out.size();i++)
 		{
-			Spell s = spellList.get(i);
+			Spell s = out.get(i);
 			if(s.level!=oldLevel)
 			{
 				oldLevel = s.level;
@@ -71,22 +83,52 @@ public class Spellbase
 		}
 	}
 	
-	private static List<Spell> addAllClass(List<Spell> curr,List<Spell> spellList,Class c)
+	private static List<Spell> addAllClass(List<Spell> curr,Class c)
 	{
-		List<Spell> temp = new ArrayList<Spell>(curr);
+		List<Spell> temp = new ArrayList<Spell>();
 		for(Spell s:spellList)
 		{
-			if(s.classes.contains(c)&&!temp.contains(s))
+			if(s.classes.contains(c)&&!curr.contains(s))
 				temp.add(s);
 		}
 		return temp;
 	}
-	private static List<Spell> subAllClass(List<Spell> curr,Class c)
+	private static List<Spell> addAllLevel(List<Spell> curr, Integer[] levels)
+	{
+		List<Spell> temp = new ArrayList<Spell>();
+		for(Spell s:spellList)
+		{
+			if(Arrays.asList(levels).contains(s.level)&&!curr.contains(s))
+				temp.add(s);
+		}
+		return temp;
+	}
+	private static List<Spell> onlyNotClass(List<Spell> curr,Class c)
 	{
 		List<Spell> temp = new ArrayList<Spell>();
 		for(Spell s:curr)
 		{
 			if(!s.classes.contains(c))
+				temp.add(s);
+		}
+		return temp;
+	}
+	private static List<Spell> onlyClass(List<Spell> curr,Class c)
+	{
+		List<Spell> temp = new ArrayList<Spell>();
+		for(Spell s:curr)
+		{
+			if(s.classes.contains(c))
+				temp.add(s);
+		}
+		return temp;
+	}
+	private static List<Spell> onlyNoAttackSave(List<Spell> curr)
+	{
+		List<Spell> temp = new ArrayList<Spell>();
+		for(Spell s:curr)
+		{
+			if(s.attackSave.contains("None"))
 				temp.add(s);
 		}
 		return temp;

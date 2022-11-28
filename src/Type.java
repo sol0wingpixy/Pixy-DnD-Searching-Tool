@@ -17,38 +17,63 @@ public enum Type {
 
 	public static Type toType(String s)
 	{
-		switch(s)
+		s = s.toLowerCase();
+		if(s.contains("aberration"))
 		{
-		case "Aberration":
 			return Type.Aberration;
-		case "Beast":
-			return Type.Beast;
-		case "Celestial":
-			return Type.Celestial;
-		case "Construct":
-			return Type.Construct;
-		case "Dragon":
-			return Type.Dragon;
-		case "Elemental":
-			return Type.Elemental;
-		case "Fey":
-			return Type.Fey;
-		case "Fiend":
-			return Type.Fiend;
-		case "Giant":
-			return Type.Giant;
-		case "Humanoid":
-			return Type.Humanoid;
-		case "Monstrosity":
-			return Type.Monstrosity;
-		case "Ooze":
-			return Type.Ooze;
-		case "Plant":
-			return Type.Plant;
-		case "Undead":
-			return Type.Undead;
-		default:
-			return null;
 		}
+		if(s.contains("beast"))
+		{
+			return Type.Beast;
+		}
+		if(s.contains("celestial"))
+		{
+			return Type.Celestial;
+		}
+		if(s.contains("construct"))
+		{
+			return Type.Construct;
+		}
+		if(s.contains("dragon"))
+		{
+			return Type.Dragon;
+		}
+		if(s.contains("elemental"))
+		{
+			return Type.Elemental;
+		}
+		if(s.contains("fey"))
+		{
+			return Type.Fey;
+		}
+		if(s.contains("fiend"))
+		{
+			return Type.Fiend;
+		}
+		if(s.contains("giant"))
+		{
+			return Type.Giant;
+		}
+		if(s.contains("humanoid"))
+		{
+			return Type.Humanoid;
+		}
+		if(s.contains("monstrosity"))
+		{
+			return Type.Monstrosity;
+		}
+		if(s.contains("ooze"))
+		{
+			return Type.Ooze;
+		}
+		if(s.contains("plant"))
+		{
+			return Type.Plant;
+		}
+		if(s.contains("undead"))
+		{
+			return Type.Undead;
+		}
+		return null;
 	}
 }
