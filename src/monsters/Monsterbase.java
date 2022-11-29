@@ -28,7 +28,7 @@ public class Monsterbase
 		//System.out.println("Read New Data? (y/n)");
 		if(/*input.nextLine().equals("y")*/true)
 		{		
-			for(int i=1;i<=106;i++) {
+			for(int i=1;i<=129;i++) {
 				extractMonsters(i,monsterList);	
 			}
 		}
@@ -484,7 +484,7 @@ public class Monsterbase
 			Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
 
 			Element curr = doc.child(0).child(1).child(0).child(0);
-
+			
 			for(int i = 0; i < curr.childrenSize(); i+=2)
 			{
 				monsterList.add(new Monster(curr.child(i),curr.child(i+1)));

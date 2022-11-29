@@ -44,15 +44,29 @@ public class Monster implements Serializable {
 		fullText = bigInfo.child(0).child(0).wholeText();
 
 		name = smolInfo.child(2).child(0).text();
+		
+		tempInt = name.indexOf("Legacy This doesn't reflect the latest rules and lore. Learn More");
+		if(tempInt != -1)
+		{
+			name = name.substring(0, tempInt) + "(Legacy)";
+		}
 
 		tempString = smolInfo.child(1).text();
 		if (tempString.contains("/")) {
 			tempString = "-" + tempString.substring(2);
 		}
-		cr = Integer.parseInt(tempString);
-		if (cr == 0)
-			cr = -10;
-
+		if(tempString.length()!=0)
+		{
+			cr = Integer.parseInt(tempString);
+			if (cr == 0)
+				cr = -10;
+		}
+		else
+		{
+			cr = 0;
+			System.out.println("CR error with "+name);
+		}
+		
 		type = Type.toType(smolInfo.child(3).text());
 		try {
 
