@@ -18,8 +18,8 @@ public class Spell implements Serializable, Comparable<Spell>
 	public boolean hasS;
 	public boolean hasM;
 	public String mComponents;
-	public String castTime;//string
-	public String duration;//string
+	public IndexedItem castTime;//string
+	public IndexedItem duration;//string
 	public String range;//string
 	public String aoeSize;//string
 	public AOEType aoeType;//enum
@@ -44,7 +44,7 @@ public class Spell implements Serializable, Comparable<Spell>
 		else
 			level = new IndexedItem(Integer.parseInt(block.child(0).child(1).text().substring(0, 1))
 					,IndexKind.SpellLevel);
-		castTime = block.child(1).child(1).text();
+		castTime = new IndexedItem(block.child(1).child(1).text(),IndexKind.SpellCastingTime);
 		range = block.child(2).child(1).text();
 		if(block.child(2).child(1).childrenSize()>0)
 		{
@@ -55,7 +55,7 @@ public class Spell implements Serializable, Comparable<Spell>
 		hasV = rawComps.contains("V");
 		hasS = rawComps.contains("S");
 		hasM = rawComps.contains("M");
-		duration = block.child(4).child(1).text();
+		duration = new IndexedItem(block.child(4).child(1).text(),IndexKind.SpellDuration);
 		school = School.toSchool(block.child(5).child(1).text());
 		attackSave = block.child(6).child(1).text();
 		damageEffect = block.child(7).child(1).text();

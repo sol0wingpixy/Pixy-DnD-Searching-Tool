@@ -41,12 +41,13 @@ public class Spellbase
 		//{}
 		List<Spell> outList = new ArrayList<Spell>();
 		//List<Spell> outList = new ArrayList<Spell>(spellList);
-		//outList = addAllClass(outList,Class.Cleric);
-		//outList = onlyNotClass(outList,Class.Wizard);
-//		outList = addAllLevel(outList,new Integer[] {1});
-//		outList = onlyNoAttackSave(outList);
-//		outList = onlyClass(outList,Class.Wizard);
-		outList = addAllIndex(outList,new IndexedItem(Class.Artificer,IndexKind.SpellClass));
+		//outList.addAll(masterSpellList);
+
+		//outList = addAllIndex(outList,new IndexedItem(Class.Cleric,IndexKind.SpellClass));
+		//outList = addAllIndex(outList,new IndexedItem(Class.Bard,IndexKind.SpellClass));
+		//outList = subAllButIndex(outList,new IndexedItem("1 Action",IndexKind.SpellCastingTime));
+		//outList = subAllButIndex(outList,new IndexedItem("Instantaneous",IndexKind.SpellDuration));
+		outList = addAllIndex(outList,new IndexedItem(true,IndexKind.SpellIsConcentration));
 		Collections.sort(outList);
 		printSpells(outList);
 		
@@ -96,9 +97,21 @@ public class Spellbase
 	private static List<Spell> addAllIndex(List<Spell> curr,IndexedItem i)
 	{
 		List<Spell> temp = new ArrayList<Spell>();
+		temp.addAll(curr);
 		for(Spell s:masterSpellList)
 		{
-			if(i.hasIndex(s)&&!curr.contains(s))
+			if(i.hasIndex(s)&&!temp.contains(s))
+				temp.add(s);
+		}
+		return temp;
+	}
+	
+	private static List<Spell> subAllButIndex(List<Spell> curr,IndexedItem i)
+	{
+		List<Spell> temp = new ArrayList<Spell>();
+		for(Spell s:curr)
+		{
+			if(i.hasIndex(s)&&!temp.contains(s))
 				temp.add(s);
 		}
 		return temp;

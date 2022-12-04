@@ -26,7 +26,7 @@ public class Monsterbase
 
 		input = new Scanner(System.in);
 		//System.out.println("Read New Data? (y/n)");
-		if(/*input.nextLine().equals("y")*/true)
+		if(/*input.nextLine().equals("y")*/false)
 		{		
 			for(int i=1;i<=129;i++) {
 				extractMonsters(i,monsterList);	
@@ -75,7 +75,7 @@ public class Monsterbase
 		//monsterList = sortBy(monsterList,"AC","Dec");
 		//monsterList = sortBy(monsterList,"HPSaves","Dec");
 		//monsterList = filterBy(monsterList,"CR","-2 -2");
-		displaySaves(monsterList,1,9);
+		displaySaves(monsterList,4,11);
 
 		
 		
@@ -144,7 +144,7 @@ public class Monsterbase
 				out += " | ConAniHPBig:" + ConAniHPBig(m);
 			}
 			
-			System.out.println(out);
+			//System.out.println(out);
 		}
 		System.out.println(monsterList.size() + " monsters found.");
 	}

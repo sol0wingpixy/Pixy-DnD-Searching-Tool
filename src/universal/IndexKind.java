@@ -5,5 +5,8 @@ public enum IndexKind
 	SpellName,
 	SpellLevel,
 	SpellClass,
-	SpellClasses
+	SpellClasses,
+	SpellCastingTime,
+	SpellDuration,
+	SpellIsConcentration
 }

@@ -29,11 +29,31 @@ public class IndexedItem implements Serializable
 			return this.getContentInt() == s.level.getContentInt();
 		case SpellClass:
 			return s.classes.getContentListClass().contains(this.getContentClass());
+		case SpellCastingTime:
+			return s.castTime.getContentString().equals(this.getContentString());
+		case SpellDuration:
+			return s.duration.getContentString().equals(this.getContentString());
+		case SpellIsConcentration:
+			return this.getContentBoolean() == s.duration.getContentString().contains("Concentration");
 		default:
 			break;
 			
 		}
 		return false;
+	}
+	
+	public boolean getContentBoolean()
+	{
+		try
+		{
+			return (Boolean)content;
+		} 
+		catch(ClassCastException e)
+		{
+			System.out.println("Attempted to cast invalid boolean");
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	public int getContentInt()
@@ -92,4 +112,8 @@ public class IndexedItem implements Serializable
 		}
 	}
 	
+	public String toString()
+	{
+		return content.toString();
+	}
 }
