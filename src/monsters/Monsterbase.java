@@ -2,6 +2,10 @@ package monsters;
 
 import org.jsoup.*;
 import org.jsoup.nodes.*;
+
+import spells.Spell;
+import universal.*;
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,7 +14,7 @@ public class Monsterbase
 {
 	private static final String FILENAME = "MonsterDatabaseSerial.txt";
 	
-	private static List<String> outputVars;
+	private static List<IndexedItem> outputVars;
 	
 	private static List<Monster> refMonsterList;
 
@@ -21,40 +25,65 @@ public class Monsterbase
 
 	public static void main(String[] args)
 	{
-		List<Monster> monsterList = new ArrayList<Monster>();
+		refMonsterList = new ArrayList<Monster>();
 		//Reading new Data:
 
 		input = new Scanner(System.in);
 		//System.out.println("Read New Data? (y/n)");
-		if(/*input.nextLine().equals("y")*/false)
+		if(/*input.nextLine().equals("y")*/true)
 		{		
 			for(int i=1;i<=129;i++) {
-				extractMonsters(i,monsterList);	
+				extractMonsters(i,refMonsterList);	
 			}
 		}
 		else
 		{
-			monsterList=readFromFile();
+			refMonsterList=readFromFile();
 		}
 		
-		monsterList = filterBy(monsterList,"hasInfo","True");
-		//monsterList = filterBy(monsterList,"Type","fiend");
-		//monsterList = filterBy(monsterList,"Subtype","devil");
-
-		refMonsterList = new ArrayList<Monster>(monsterList);
+		List<Monster> monsterList = new ArrayList<Monster>(); 
 		
-		outputVars = new ArrayList<String>();
+		//monsterList = filterBy(monsterList,"hasInfo","True");
+		//monsterList = filterBy(monsterList,"Type","undead");
+		//monsterList = filterBy(monsterList,"Subtype","devil");
+		//monsterList = addAllIndex(monsterList,IndexedItem.TypeBeast);
+		
+		outputVars = new ArrayList<IndexedItem>();
 		
 		//outputToFile(monsterList);
 
 		//displayAC(monsterList,-4,3);
+		double[] avgAC = new double[Monster.CR_ORDER.length];
+		double[] avgToHit = new double[Monster.CR_ORDER.length];
+		int[] crCount = new int[Monster.CR_ORDER.length];
+		int tempIndexCR;
+		for(Monster m:refMonsterList)
+		{
+			if(m.hasInfo && m.hasToHit && m.cr != 0)
+			{
+				tempIndexCR = Monster.indexOfCR(m.cr);
+				if(tempIndexCR==-1)
+					System.out.println(m.name);
+				avgAC[tempIndexCR] += m.ac;
+				avgToHit[tempIndexCR] += m.toHitMod;
+				crCount[tempIndexCR]++;
+			}
+			if(m.cr==0)
+				System.out.println(m.name);
+		}
+		for(int i = 0; i < avgAC.length; i++)
+		{
+			avgAC[i] = avgAC[i]/crCount[i];
+			avgToHit[i] = avgToHit[i]/crCount[i];
+			System.out.println(avgAC[i]-avgToHit[i]);
+		}
 		
 		
-		monsterList = addToList(monsterList,"Type","Undead");
+		//monsterList = addToList(monsterList,"Type","Undead");
 		//monsterList = filterBy(monsterList,"Trim","Swarm of");
-		//monsterList = filterBy(monsterList,"CR","1 1");
-		//monsterList = filterBy(monsterList,"Search","Possession");
-		//monsterList = filterBy(monsterList,"Search","counterspell");
+		//monsterList = filterBy(monsterList,"CR","0 2");
+		//masterMonsterList = filterBy(masterMonsterList,"Search","Damage Transfer");
+		//monsterList = filterBy(monsterList,"Search","fly");
 		//monsterList = filterBy(monsterList,"SearchConditionImmunities","stunned");
 		
 		//monsterList = invertSearch(monsterList,refMonsterList);
@@ -70,12 +99,12 @@ public class Monsterbase
 		//monsterList = sortBy(monsterList, "HPACMA","Dec");
 		//monsterList = sortBy(monsterList, "HP","Dec");
 		//monsterList = sortBy(monsterList,"HP","Dec");
-		monsterList = sortBy(monsterList,"CR","Dec");
+		//monsterList = sortByOrder(monsterList,SortOrder.CR_ASC);
 		//monsterList = sortBy(monsterList,"ConSave","Dec");
 		//monsterList = sortBy(monsterList,"AC","Dec");
 		//monsterList = sortBy(monsterList,"HPSaves","Dec");
 		//monsterList = filterBy(monsterList,"CR","-2 -2");
-		displaySaves(monsterList,4,11);
+		//displaySaves(monsterList,4,11);
 
 		
 		
@@ -144,11 +173,29 @@ public class Monsterbase
 				out += " | ConAniHPBig:" + ConAniHPBig(m);
 			}
 			
-			//System.out.println(out);
+			System.out.println(out);
 		}
 		System.out.println(monsterList.size() + " monsters found.");
 	}
 
+	private static List<Monster> addAllIndex(List<Monster> monsterList, IndexedItem i)
+	{
+		List<Monster> temp = new ArrayList<Monster>();
+		temp.addAll(monsterList);
+		for(Monster m:refMonsterList)
+		{
+			if(i.hasIndex(m)&&!temp.contains(m))
+				temp.add(m);
+		}
+		return temp;
+	}
+	
+	private static List<Monster> sortByOrder(List<Monster> monsterList, SortOrder s)
+	{
+		
+		return monsterList;
+	}
+	
 	private static List<Monster> invertSearch(List<Monster> monsterList, List<Monster> ogMonsterList)
 	{
 		List<Monster> newMonsterList = new ArrayList<Monster>();
@@ -162,105 +209,105 @@ public class Monsterbase
 		return newMonsterList;
 	}
 	
-	private static List<Monster> sortBy(List<Monster> monsterList, String sortType, String sorter)
-	{
-		outputVars.add(sortType);
-		switch(sortType)
-		{
-		case "HP":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m2.hp).compareTo(m1.hp)).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m1.hp).compareTo(m2.hp)).collect(Collectors.toList());
-			return monsterList;
-		case "AC":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m2.ac).compareTo(m1.ac)).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m1.ac).compareTo(m2.ac)).collect(Collectors.toList());
-			return monsterList;
-		case "ConAniHP":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> convertHP(m2).compareTo(convertHP(m1))).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> convertHP(m1).compareTo(convertHP(m2))).collect(Collectors.toList());
-			return monsterList;
-		case "HPSaves":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> avgHPSaves(m2).compareTo(avgHPSaves(m1))).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> avgHPSaves(m1).compareTo(avgHPSaves(m2))).collect(Collectors.toList());
-			return monsterList;
-		case "HPAC":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> avgHPAC(m2).compareTo(avgHPAC(m1))).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> avgHPAC(m1).compareTo(avgHPAC(m2))).collect(Collectors.toList());
-			return monsterList;
-		case "HPACMA":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> avgHPACMA(m2).compareTo(avgHPACMA(m1))).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> avgHPACMA(m1).compareTo(avgHPACMA(m2))).collect(Collectors.toList());
-			return monsterList;
-		case "ConSave":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m2.saves[2]).compareTo(m1.saves[2])).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m1.saves[2]).compareTo(m2.saves[2])).collect(Collectors.toList());
-			return monsterList;
-		case "toHit":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m2.toHitMod).compareTo(m1.toHitMod)).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m1.toHitMod).compareTo(m2.toHitMod)).collect(Collectors.toList());
-			return monsterList;
-		case "AvgDmg":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> new Double(m2.avgDamage).compareTo(m1.avgDamage)).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> new Double(m1.avgDamage).compareTo(m2.avgDamage)).collect(Collectors.toList());
-			return monsterList;
-		case "CR":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m2.cr).compareTo(m1.cr)).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m1.cr).compareTo(m2.cr)).collect(Collectors.toList());
-			return monsterList;
-		case "Size":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> m2.sizeNumber().compareTo(m1.sizeNumber())).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> m1.sizeNumber().compareTo(m2.sizeNumber())).collect(Collectors.toList());
-			return monsterList;
-		case "AvgDmgAdj":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> convertAvgDmg(m2).compareTo(convertAvgDmg(m1))).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> convertAvgDmg(m1).compareTo(convertAvgDmg(m2))).collect(Collectors.toList());
-			return monsterList;
-		case "AvgDmgToHit":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> avgDmgToHit(m2).compareTo(avgDmgToHit(m1))).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> avgDmgToHit(m1).compareTo(avgDmgToHit(m2))).collect(Collectors.toList());
-			return monsterList;
-		case "Hybrid":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> HybridAvg(m2).compareTo(HybridAvg(m1))).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> HybridAvg(m1).compareTo(HybridAvg(m2))).collect(Collectors.toList());
-			return monsterList;
-		case "ConAniHPBig":
-			if(sorter.equals("Dec"))
-				monsterList = monsterList.stream().sorted((m1,m2) -> ConAniHPBig(m2).compareTo(ConAniHPBig(m1))).collect(Collectors.toList());
-			else
-				monsterList = monsterList.stream().sorted((m1,m2) -> ConAniHPBig(m1).compareTo(ConAniHPBig(m2))).collect(Collectors.toList());
-			return monsterList;
-		default:
-			return monsterList;
-		}
-	}
+//	private static List<Monster> sortBy(List<Monster> monsterList, String sortType, String sorter)
+//	{
+//		outputVars.add(sortType);
+//		switch(sortType)
+//		{
+//		case "HP":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m2.hp).compareTo(m1.hp)).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m1.hp).compareTo(m2.hp)).collect(Collectors.toList());
+//			return monsterList;
+//		case "AC":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m2.ac).compareTo(m1.ac)).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m1.ac).compareTo(m2.ac)).collect(Collectors.toList());
+//			return monsterList;
+//		case "ConAniHP":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> convertHP(m2).compareTo(convertHP(m1))).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> convertHP(m1).compareTo(convertHP(m2))).collect(Collectors.toList());
+//			return monsterList;
+//		case "HPSaves":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> avgHPSaves(m2).compareTo(avgHPSaves(m1))).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> avgHPSaves(m1).compareTo(avgHPSaves(m2))).collect(Collectors.toList());
+//			return monsterList;
+//		case "HPAC":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> avgHPAC(m2).compareTo(avgHPAC(m1))).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> avgHPAC(m1).compareTo(avgHPAC(m2))).collect(Collectors.toList());
+//			return monsterList;
+//		case "HPACMA":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> avgHPACMA(m2).compareTo(avgHPACMA(m1))).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> avgHPACMA(m1).compareTo(avgHPACMA(m2))).collect(Collectors.toList());
+//			return monsterList;
+//		case "ConSave":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m2.saves[2]).compareTo(m1.saves[2])).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m1.saves[2]).compareTo(m2.saves[2])).collect(Collectors.toList());
+//			return monsterList;
+//		case "toHit":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m2.toHitMod).compareTo(m1.toHitMod)).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m1.toHitMod).compareTo(m2.toHitMod)).collect(Collectors.toList());
+//			return monsterList;
+//		case "AvgDmg":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> new Double(m2.avgDamage).compareTo(m1.avgDamage)).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> new Double(m1.avgDamage).compareTo(m2.avgDamage)).collect(Collectors.toList());
+//			return monsterList;
+//		case "CR":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m2.cr).compareTo(m1.cr)).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> new Integer(m1.cr).compareTo(m2.cr)).collect(Collectors.toList());
+//			return monsterList;
+//		case "Size":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> m2.sizeNumber().compareTo(m1.sizeNumber())).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> m1.sizeNumber().compareTo(m2.sizeNumber())).collect(Collectors.toList());
+//			return monsterList;
+//		case "AvgDmgAdj":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> convertAvgDmg(m2).compareTo(convertAvgDmg(m1))).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> convertAvgDmg(m1).compareTo(convertAvgDmg(m2))).collect(Collectors.toList());
+//			return monsterList;
+//		case "AvgDmgToHit":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> avgDmgToHit(m2).compareTo(avgDmgToHit(m1))).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> avgDmgToHit(m1).compareTo(avgDmgToHit(m2))).collect(Collectors.toList());
+//			return monsterList;
+//		case "Hybrid":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> HybridAvg(m2).compareTo(HybridAvg(m1))).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> HybridAvg(m1).compareTo(HybridAvg(m2))).collect(Collectors.toList());
+//			return monsterList;
+//		case "ConAniHPBig":
+//			if(sorter.equals("Dec"))
+//				monsterList = monsterList.stream().sorted((m1,m2) -> ConAniHPBig(m2).compareTo(ConAniHPBig(m1))).collect(Collectors.toList());
+//			else
+//				monsterList = monsterList.stream().sorted((m1,m2) -> ConAniHPBig(m1).compareTo(ConAniHPBig(m2))).collect(Collectors.toList());
+//			return monsterList;
+//		default:
+//			return monsterList;
+//		}
+//	}
 	
 	public static Integer ConAniHPBig(Monster m)
 	{
@@ -341,19 +388,19 @@ public class Monsterbase
 		return result;
 	}
 
-	private static List<Monster> addToList(List<Monster> monsterList, String addType, String addText)
-	{
-		List<Monster >tempMonsterList = new ArrayList<>(refMonsterList);
-		switch(addType)
-		{
-		case "Type":
-			tempMonsterList = tempMonsterList.stream().filter(m -> m.type == Type.toType(addText)).collect(Collectors.toList());
-			monsterList.addAll(tempMonsterList);
-			return monsterList;
-		default:
-			return monsterList;
-		}
-	}
+//	private static List<Monster> addToList(List<Monster> monsterList, String addType, String addText)
+//	{
+//		List<Monster >tempMonsterList = new ArrayList<>(refMonsterList);
+//		switch(addType)
+//		{
+//		case "Type":
+//			tempMonsterList = tempMonsterList.stream().filter(m -> m.type == Type.toType(addText)).collect(Collectors.toList());
+//			monsterList.addAll(tempMonsterList);
+//			return monsterList;
+//		default:
+//			return monsterList;
+//		}
+//	}
 	
 	private static List<Monster> filterBy(List<Monster> monsterList, String filterType, String filter)
 	{
@@ -363,9 +410,9 @@ public class Monsterbase
 		case "hasInfo":
 			monsterList = monsterList.stream().filter(m -> m.hasInfo == Boolean.parseBoolean(filter)).collect(Collectors.toList());
 			return monsterList;
-		case "Type":
-			monsterList = monsterList.stream().filter(m -> m.type == Type.toType(filter)).collect(Collectors.toList());
-			return monsterList;
+//		case "Type":
+//			monsterList = monsterList.stream().filter(m -> m.type == Type.toType(filter)).collect(Collectors.toList());
+//			return monsterList;
 		case "CR":
 			String[] temp = filter.split(" ");
 			int[] minAndMax = {Integer.parseInt(temp[0]),Integer.parseInt(temp[1])};

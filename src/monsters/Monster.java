@@ -3,17 +3,30 @@ package monsters;
 import org.jsoup.nodes.*;
 import java.util.*;
 import java.io.*;
+import universal.*;
 
 public class Monster implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final String[] statNames = new String[] {"STR","DEX","CON","INT","WIS","CHA"};
+	public static final int[] CR_ORDER = new int[] {-10,-8,-4,-2,1,2,3,4,5,6,7,8,9,10,11,12,13,14,
+			15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30};
+	public static int indexOfCR(int cr)
+	{
+		for(int i = 0; i < CR_ORDER.length; i++)
+		{
+			int temp = CR_ORDER[i];
+			if(temp == cr)
+				return i;
+		}
+		return -1;
+	}
 
-	boolean hasInfo;
+	public boolean hasInfo;
 	public String name;
-	int cr;
-	public Type type;
+	public int cr;
+	public IndexedItem type;
 	public String source;
 	public String size;// Enum?
 	public String subtype = "";
@@ -45,6 +58,9 @@ public class Monster implements Serializable {
 
 		name = smolInfo.child(2).child(0).text();
 		
+		if(name.contains("Shrub"))
+			System.out.println();
+		
 		tempInt = name.indexOf("Legacy This doesn't reflect the latest rules and lore. Learn More");
 		if(tempInt != -1)
 		{
@@ -67,7 +83,7 @@ public class Monster implements Serializable {
 			System.out.println("CR error with "+name);
 		}
 		
-		type = Type.toType(smolInfo.child(3).text());
+		type = new IndexedItem(Type.toType(smolInfo.child(3).text()),IndexKind.MonsterType);
 		try {
 
 

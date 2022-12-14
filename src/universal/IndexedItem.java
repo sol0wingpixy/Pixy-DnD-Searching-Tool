@@ -6,6 +6,9 @@ import java.util.*;
 import spells.*;
 import spells.Class;
 
+import monsters.*;
+import monsters.Type;
+
 public class IndexedItem implements Serializable
 {
 	private static final long serialVersionUID = 1L;
@@ -30,18 +33,28 @@ public class IndexedItem implements Serializable
 		case SpellClass:
 			return s.classes.getContentListClass().contains(this.getContentClass());
 		case SpellCastingTime:
-			return s.castTime.getContentString().equals(this.getContentString());
+			return s.castTime.getContentString().contains(this.getContentString());
 		case SpellDuration:
 			return s.duration.getContentString().equals(this.getContentString());
 		case SpellIsConcentration:
 			return this.getContentBoolean() == s.duration.getContentString().contains("Concentration");
 		default:
-			break;
-			
+			return false;	
 		}
-		return false;
 	}
 	
+	public boolean hasIndex(Monster m)
+	{
+		switch(indexKind)
+		{
+		case MonsterType:
+			return this.getContentType().equals(m.type.getContentType());
+		default:
+			return false;
+		}
+		
+	}
+		
 	public boolean getContentBoolean()
 	{
 		try
@@ -84,6 +97,20 @@ public class IndexedItem implements Serializable
 		}
 	}
 	
+	public Type getContentType()
+	{
+		try
+		{
+			return (Type)content;
+		} 
+		catch(ClassCastException e)
+		{
+			System.out.println("Attempted to cast invalid type");
+			e.printStackTrace();
+			return Type.NA;
+		}
+	}
+	
 	public Class getContentClass()
 	{
 		try
@@ -92,7 +119,7 @@ public class IndexedItem implements Serializable
 		} 
 		catch(ClassCastException e)
 		{
-			System.out.println("Attempted to cast invalid list of class");
+			System.out.println("Attempted to cast invalid class");
 			e.printStackTrace();
 			return Class.NA;
 		}
@@ -115,5 +142,14 @@ public class IndexedItem implements Serializable
 	public String toString()
 	{
 		return content.toString();
+	}
+	
+	public static final IndexedItem TypeUndead = new IndexedItem(Type.Undead,IndexKind.MonsterType);
+	public static final IndexedItem TypeBeast = new IndexedItem(Type.Beast,IndexKind.MonsterType);
+
+	
+	public static IndexedItem CR(int i)
+	{
+		return new IndexedItem(i,IndexKind.MonsterCR);
 	}
 }

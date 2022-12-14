@@ -14,7 +14,8 @@ public enum Type {
 	Monstrosity,
 	Ooze,
 	Plant,
-	Undead;
+	Undead,
+	NA;
 
 	public static Type toType(String s)
 	{

@@ -41,13 +41,14 @@ public class Spellbase
 		//{}
 		List<Spell> outList = new ArrayList<Spell>();
 		//List<Spell> outList = new ArrayList<Spell>(spellList);
-		//outList.addAll(masterSpellList);
+		outList.addAll(masterSpellList);
 
 		//outList = addAllIndex(outList,new IndexedItem(Class.Cleric,IndexKind.SpellClass));
 		//outList = addAllIndex(outList,new IndexedItem(Class.Bard,IndexKind.SpellClass));
-		//outList = subAllButIndex(outList,new IndexedItem("1 Action",IndexKind.SpellCastingTime));
-		//outList = subAllButIndex(outList,new IndexedItem("Instantaneous",IndexKind.SpellDuration));
-		outList = addAllIndex(outList,new IndexedItem(true,IndexKind.SpellIsConcentration));
+		//outList = addAllIndex(outList,new IndexedItem("1 Reaction",IndexKind.SpellCastingTime));
+		outList = subAllButIndex(outList,new IndexedItem("1 Action",IndexKind.SpellCastingTime));
+		outList = subAllButIndex(outList,new IndexedItem("Instantaneous",IndexKind.SpellDuration));
+		//outList = addAllIndex(outList,new IndexedItem(true,IndexKind.SpellIsConcentration));
 		Collections.sort(outList);
 		printSpells(outList);
 		
@@ -214,13 +215,20 @@ public class Spellbase
 	{
 		try
 		{
-			File input = new File("src/spell-pages/spell-page"+num+".html");
+			File input = new File("src/Spell-Pages/Spell-Page"+num+".html");
 			Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
-			Element curr = doc.child(0).child(1).child(0);
+			Element curr = doc.child(0);
+			curr = curr.child(1);
+			curr = curr.child(0);
+			curr = curr.child(0);
+			
+			Spell newSpell;
 
 			for(int i = 1; i < curr.childrenSize(); i+=2)
 			{
-				spellList.add(new Spell(curr.child(i-1).child(2).child(0).text(),curr.child(i)));
+				newSpell = new Spell(curr.child(i-1).child(2).child(0).text(),curr.child(i));
+				if(!newSpell.name.getContentString().equals("skip"))
+						spellList.add(new Spell(curr.child(i-1).child(2).child(0).text(),curr.child(i)));
 			}
 		}
 		catch(IOException e)

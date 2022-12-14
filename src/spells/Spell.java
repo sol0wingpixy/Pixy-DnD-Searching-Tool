@@ -37,45 +37,54 @@ public class Spell implements Serializable, Comparable<Spell>
 		{
 			n = n.substring(0, n.length()-14);
 		}
-		name = new IndexedItem (n,IndexKind.SpellName);
+		name = new IndexedItem(n,IndexKind.SpellName);
+		
 		Element block = el.child(0).child(0);
-		if(block.child(0).child(1).text().equals("Cantrip"))
-			level = new IndexedItem(0,IndexKind.SpellLevel);
+		if(block.className().equals("ddb-blocked-content") || n.equals("Freedom of the Waves") || n.equals("Freedom of the Winds"))
+		{
+			name = new IndexedItem("skip",IndexKind.SpellName);
+		}
 		else
-			level = new IndexedItem(Integer.parseInt(block.child(0).child(1).text().substring(0, 1))
-					,IndexKind.SpellLevel);
-		castTime = new IndexedItem(block.child(1).child(1).text(),IndexKind.SpellCastingTime);
-		range = block.child(2).child(1).text();
-		if(block.child(2).child(1).childrenSize()>0)
 		{
-			aoeSize = block.child(2).child(1).child(0).text();
-			aoeType = AOEType.toAOEType(block.child(2).child(1).child(0).child(0).attributes().get("class"));
+			if (block.child(0).child(1).text().equals("Cantrip"))
+				level = new IndexedItem(0, IndexKind.SpellLevel);
+			else
+				level = new IndexedItem(Integer.parseInt(block.child(0).child(1).text().substring(0, 1)),
+						IndexKind.SpellLevel);
+			castTime = new IndexedItem(block.child(1).child(1).text(), IndexKind.SpellCastingTime);
+			range = block.child(2).child(1).text();
+			if (block.child(2).child(1).childrenSize() > 0)
+			{
+				aoeSize = block.child(2).child(1).child(0).text();
+				aoeType = AOEType.toAOEType(block.child(2).child(1).child(0).child(0).attributes().get("class"));
+			}
+			String rawComps = block.child(3).child(1).child(0).text();
+			hasV = rawComps.contains("V");
+			hasS = rawComps.contains("S");
+			hasM = rawComps.contains("M");
+			duration = new IndexedItem(block.child(4).child(1).text(), IndexKind.SpellDuration);
+			school = School.toSchool(block.child(5).child(1).text());
+			attackSave = block.child(6).child(1).text();
+			damageEffect = block.child(7).child(1).text();
+			text = el.child(0).child(2).text();
+			if (block.child(3).child(1).child(0).text().contains("*"))
+				mComponents = text.substring(text.indexOf("* - (") + 5, text.length() - 1);
+			List<Class> tempClasses = new ArrayList<Class>();
+			Element classPar = el.child(1).child(2);
+			if (!classPar.text().contains("Classes"))
+			{
+				classPar = el.child(1).child(1);
+			}
+			for (Element i : classPar.children())
+			{
+				Class c = Class.toClass(i.text());
+				if (c != null)
+				{
+					tempClasses.add(c);
+				}
+			}
+			classes = new IndexedItem(tempClasses, IndexKind.SpellClasses);
 		}
-		String rawComps = block.child(3).child(1).child(0).text();
-		hasV = rawComps.contains("V");
-		hasS = rawComps.contains("S");
-		hasM = rawComps.contains("M");
-		duration = new IndexedItem(block.child(4).child(1).text(),IndexKind.SpellDuration);
-		school = School.toSchool(block.child(5).child(1).text());
-		attackSave = block.child(6).child(1).text();
-		damageEffect = block.child(7).child(1).text();
-		text = el.child(0).child(2).text();
-		if(block.child(3).child(1).child(0).text().contains("*"))
-			mComponents = text.substring(text.indexOf("* - (")+5,text.length()-1);
-		List<Class> tempClasses = new ArrayList<Class>();
-		Element classPar = el.child(1).child(2);
-		if(!classPar.text().contains("Classes"))
-		{
-			classPar = el.child(1).child(1);
-		}
-		for(Element i:classPar.children())
-		{
-			Class c = Class.toClass(i.text());
-			if(c!=null) {
-				tempClasses.add(c);
-			}	
-		}
-		classes = new IndexedItem(tempClasses,IndexKind.SpellClasses);
 	}
 
 	
