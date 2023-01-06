@@ -37,6 +37,9 @@ public class Spell implements Serializable, Comparable<Spell>
 		{
 			n = n.substring(0, n.length()-14);
 		}
+		
+		n = n.replace("’", "'");
+		
 		name = new IndexedItem(n,IndexKind.SpellName);
 		
 		Element block = el.child(0).child(0);
@@ -93,6 +96,11 @@ public class Spell implements Serializable, Comparable<Spell>
 		int levelDif = ((this.level.getContentInt()*100)+100)-((s.level.getContentInt()*100)+100);
 		int alphaDif = this.name.getContentString().charAt(0)-s.name.getContentString().charAt(0);
 		return levelDif+alphaDif;
+	}
+	
+	public boolean equals(Spell s)
+	{
+		return this.name.equals(s.name);
 	}
 	
 	public String toString()

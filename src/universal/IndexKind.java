@@ -10,5 +10,8 @@ public enum IndexKind
 	SpellDuration,
 	SpellIsConcentration,
 	MonsterType,
-	MonsterCR;
+	MonsterCR,
+	ItemName,
+	ItemAttunement,
+	ItemRarity;
 }

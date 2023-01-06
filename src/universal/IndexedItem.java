@@ -9,6 +9,8 @@ import spells.Class;
 import monsters.*;
 import monsters.Type;
 
+import items.*;
+
 public class IndexedItem implements Serializable
 {
 	private static final long serialVersionUID = 1L;
@@ -20,6 +22,11 @@ public class IndexedItem implements Serializable
 	{
 		this.content = o;
 		this.indexKind = k;
+	}
+	
+	public boolean equals(IndexedItem i)
+	{
+		return this.content.equals(i.content);
 	}
 	
 	public boolean hasIndex(Spell s)
@@ -52,7 +59,15 @@ public class IndexedItem implements Serializable
 		default:
 			return false;
 		}
-		
+	}
+	
+	public boolean hasIndex(MagicItem mi)
+	{
+		switch(indexKind)
+		{
+		default:
+			return false;
+		}
 	}
 		
 	public boolean getContentBoolean()
@@ -136,6 +151,20 @@ public class IndexedItem implements Serializable
 			System.out.println("Attempted to cast invalid list of class");
 			e.printStackTrace();
 			return new ArrayList<Class>();
+		}
+	}
+	
+	public Rarity getContentRarity()
+	{
+		try
+		{
+			return (Rarity)content;
+		} 
+		catch(ClassCastException e)
+		{
+			System.out.println("Attempted to cast invalid rarity");
+			e.printStackTrace();
+			return Rarity.NA;
 		}
 	}
 	

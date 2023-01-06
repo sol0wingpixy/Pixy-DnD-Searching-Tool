@@ -10,9 +10,10 @@ import java.util.*;
 public class Spellbase
 {
 	private static final String FILENAME = "SpellDatabaseSerial.txt";
+	private static final int NUM_PAGES = 27;
 	
 	private static Scanner input;
-	private static ArrayList<Spell> masterSpellList;
+	private static List<Spell> masterSpellList;
 	
 	public static void main(String[] args)
 	{
@@ -23,7 +24,7 @@ public class Spellbase
 		//System.out.println("Read New Data? (y/n)");
 		if(/*input.nextLine().equals("y")*/true)
 		{
-			for(int i = 1; i <= 26; i++)
+			for(int i = 1; i <= NUM_PAGES; i++)
 			{
 				extractSpells(i,masterSpellList);
 			}
@@ -52,6 +53,26 @@ public class Spellbase
 		Collections.sort(outList);
 		printSpells(outList);
 		
+	}
+	
+	public static List<Spell> getMasterSpellList()
+	{
+		List<Spell> sentSpellList = new ArrayList<Spell>();
+		input = new Scanner(System.in);
+		//System.out.println("Read New Data? (y/n)");
+		if(/*input.nextLine().equals("y")*/true)
+		{
+			for(int i = 1; i <= NUM_PAGES; i++)
+			{
+				extractSpells(i,sentSpellList);
+			}
+		}
+		else
+		{
+			sentSpellList=readFromFile();
+		}
+		
+		return sentSpellList;
 	}
 
 //	public static boolean ioLoop(List<Spell> spellList) {
@@ -118,72 +139,13 @@ public class Spellbase
 		return temp;
 	}
 	
-	private static List<Spell> addAllClass(List<Spell> curr,Class c)
-	{
-		List<Spell> temp = new ArrayList<Spell>();
-		for(Spell s:masterSpellList)
-		{
-//			if(s.classes.contains(c)&&!curr.contains(s))
-//				temp.add(s);
-		}
-		return temp;
-	}
-	private static List<Spell> addAllLevel(List<Spell> curr, Integer[] levels)
-	{
-		List<Spell> temp = new ArrayList<Spell>();
-		for(Spell s:masterSpellList)
-		{
-			if(Arrays.asList(levels).contains(s.level)&&!curr.contains(s))
-				temp.add(s);
-		}
-		return temp;
-	}
-	private static List<Spell> onlyNotClass(List<Spell> curr,Class c)
-	{
-		List<Spell> temp = new ArrayList<Spell>();
-		for(Spell s:curr)
-		{
-//			if(!s.classes.contains(c))
-//				temp.add(s);
-		}
-		return temp;
-	}
-	private static List<Spell> onlyClass(List<Spell> curr,Class c)
-	{
-		List<Spell> temp = new ArrayList<Spell>();
-		for(Spell s:curr)
-		{
-//			if(s.classes.contains(c))
-//				temp.add(s);
-		}
-		return temp;
-	}
-	private static List<Spell> onlyNoAttackSave(List<Spell> curr)
-	{
-		List<Spell> temp = new ArrayList<Spell>();
-		for(Spell s:curr)
-		{
-			if(s.attackSave.contains("None"))
-				temp.add(s);
-		}
-		return temp;
-	}
-	private static int getResponse(String q,String[] ans){
-		System.out.println(q);
-		System.out.println("0: Done");
-		for(int i = 1; i <= ans.length; i++) {
-			System.out.println(i + ": " + ans[i-1]);
-		}
-		int i = Integer.parseInt(input.nextLine());
-		return i;
-	}
-	public static ArrayList<Spell> readFromFile()
+	public static List<Spell> readFromFile()
 	{
 		try
 		{
 			FileInputStream inputFile = new FileInputStream(FILENAME);
 			ObjectInputStream objIn = new ObjectInputStream(inputFile);
-			ArrayList<Spell> readSpellList = (ArrayList<Spell>)objIn.readObject();
+			List<Spell> readSpellList = (ArrayList<Spell>)objIn.readObject();
 			objIn.close();
 			inputFile.close();
 			return readSpellList;
@@ -195,7 +157,7 @@ public class Spellbase
 		}
 	}
 
-	public static void outputToFile(ArrayList<Spell> spellList)
+	public static void outputToFile(List<Spell> spellList)
 	{
 		try
 		{
@@ -211,7 +173,7 @@ public class Spellbase
 		}
 	}
 
-	public static void extractSpells(int num, ArrayList<Spell> spellList)
+	public static void extractSpells(int num, List<Spell> spellList)
 	{
 		try
 		{
