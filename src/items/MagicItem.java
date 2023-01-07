@@ -24,6 +24,7 @@ public class MagicItem implements Serializable, Comparable<MagicItem>
 		String tempString;
 		int tempInt;
 		n = n.replace("’", "'");
+		n = n.replace("Legacy This doesn't reflect the latest rules and lore. Learn More", "(Legacy)");
 		name = new IndexedItem(n,IndexKind.ItemName);
 		Element block = el.child(0).child(0);
 		tempString = block.child(0).text();
@@ -47,8 +48,6 @@ public class MagicItem implements Serializable, Comparable<MagicItem>
 		int verifyCount = 0;
 		for(Spell s : masterSpellList)
 		{
-			if(s.name.getContentString().toLowerCase().contains("rary") && this.name.getContentString().contains("Chronicle"))
-				System.out.println("rary");
 			for(int i = 0; i < spellNames.size(); i++)
 			{
 				if(s.name.getContentString().toLowerCase().equals(spellNames.get(i).toLowerCase()))
@@ -64,6 +63,17 @@ public class MagicItem implements Serializable, Comparable<MagicItem>
 			System.out.println(name + " has bad spells");
 		}
 		Element notes = block.child(block.childrenSize()-1);
+	}
+	
+	public boolean hasSpell(String spellName)
+	{
+		spellName = spellName.toLowerCase();
+		for(Spell s:spellList)
+		{
+			if(s.name.getContentString().toLowerCase().equals(spellName))
+				return true;
+		}
+		return false;
 	}
 	
 	public int compareTo(MagicItem o)

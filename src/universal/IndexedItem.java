@@ -28,6 +28,7 @@ public class IndexedItem implements Serializable
 	{
 		return this.content.equals(i.content);
 	}
+
 	
 	public boolean hasIndex(Spell s)
 	{
@@ -69,7 +70,7 @@ public class IndexedItem implements Serializable
 			return false;
 		}
 	}
-		
+	
 	public boolean getContentBoolean()
 	{
 		try

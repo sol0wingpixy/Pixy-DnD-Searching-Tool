@@ -42,8 +42,12 @@ public class Itembase
 		
 		
 		List<MagicItem> outList = new ArrayList<MagicItem>();
-		outList.addAll(masterItemList);
+		//outList.addAll(masterItemList);
 
+		outList = addAllSpell(outList,"Magic Missile");
+		
+		Collections.sort(outList, Comparators.sortItemByRarity());
+		
 		Collections.sort(outList);
 		printItems(outList);
 		
@@ -65,6 +69,7 @@ public class Itembase
 		System.out.println("Found " + out.size() + " items, skipped "+skippedItems + " items.");
 	}
 	
+	
 	private static List<MagicItem> addAllIndex(List<MagicItem> curr,IndexedItem i)
 	{
 		List<MagicItem> temp = new ArrayList<MagicItem>();
@@ -72,6 +77,18 @@ public class Itembase
 		for(MagicItem mi:masterItemList)
 		{
 			if(i.hasIndex(mi)&&!temp.contains(mi))
+				temp.add(mi);
+		}
+		return temp;
+	}
+	
+	private static List<MagicItem> addAllSpell(List<MagicItem> curr,String spell)
+	{
+		List<MagicItem> temp = new ArrayList<MagicItem>();
+		temp.addAll(curr);
+		for(MagicItem mi:masterItemList)
+		{
+			if(mi.hasSpell(spell)&&!temp.contains(mi))
 				temp.add(mi);
 		}
 		return temp;

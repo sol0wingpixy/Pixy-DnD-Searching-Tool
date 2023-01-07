@@ -78,7 +78,6 @@ public class Monsterbase
 			System.out.println(avgAC[i]-avgToHit[i]);
 		}
 		
-		
 		//monsterList = addToList(monsterList,"Type","Undead");
 		//monsterList = filterBy(monsterList,"Trim","Swarm of");
 		//monsterList = filterBy(monsterList,"CR","0 2");

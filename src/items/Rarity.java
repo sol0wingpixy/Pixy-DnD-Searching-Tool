@@ -33,4 +33,30 @@ public enum Rarity
 		System.out.println("Failed to id rarity: "+s);
 		return NA;
 	}
+	
+	public static int rarityToInt(Rarity r)
+	{
+		switch(r)
+		{
+		case Common:
+			return 1;
+		case Uncommon:
+			return 2;
+		case Rare:
+			return 3;
+		case VeryRare:
+			return 4;
+		case Legendary:
+			return 5;
+		case Artifact:
+			return 6;
+		case Varies:
+			return 7;
+		case Unknown:
+			return 8;
+		default:
+			return 0;
+		}
+	}
+	
 }
