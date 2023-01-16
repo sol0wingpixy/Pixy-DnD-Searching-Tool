@@ -99,7 +99,8 @@ public class Monster implements Serializable {
 				while(tempInt != -1)
 				{
 					tempString = tempString.substring(tempInt + 13);
-					spellNames.add(tempString.substring(tempString.indexOf('>')+1,tempString.indexOf('<')).replace("’", "'"));
+					spellNames.add(tempString.substring(tempString.indexOf('>')+1,tempString.indexOf('<')).
+							replace("’", "'").replace(",","").strip());
 					tempInt = tempString.indexOf("spell-tooltip");
 				}
 				List<Spell> masterSpellList = Spellbase.getMasterSpellList();
