@@ -1,11 +1,11 @@
 package spells;
+import java.io.*;
+import java.util.*;
+
 import org.jsoup.*;
 import org.jsoup.nodes.*;
 
 import universal.*;
-
-import java.io.*;
-import java.util.*;
 
 public class Spellbase
 {

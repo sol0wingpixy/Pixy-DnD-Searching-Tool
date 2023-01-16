@@ -91,46 +91,46 @@ public class Monsterbase
 					if(m.forceSaves[j])
 						allSaveFreq[j]++;
 		}
-		//		System.out.println("Str: "+saveFreq[0]);
-		//		System.out.println("Dex: "+saveFreq[1]);
-		//		System.out.println("Con: "+saveFreq[2]);
-		//		System.out.println("Int: "+saveFreq[3]);
-		//		System.out.println("Wis: "+saveFreq[4]);
-		//		System.out.println("Cha: "+saveFreq[5]);
+				System.out.println("Str: "+allSaveFreq[0]);
+				System.out.println("Dex: "+allSaveFreq[1]);
+				System.out.println("Con: "+allSaveFreq[2]);
+				System.out.println("Int: "+allSaveFreq[3]);
+				System.out.println("Wis: "+allSaveFreq[4]);
+				System.out.println("Cha: "+allSaveFreq[5]);
 
 		System.out.println("Fort: " + (allSaveFreq[0]+allSaveFreq[2]));
 		System.out.println("Refl: " + (allSaveFreq[1]));
-		System.out.println("Will: " + (allSaveFreq[3]+allSaveFreq[4]/*+allSaveFreq[5]*/));
-		for(int i = 1; i <= 6; i++)
-		{
-			int[] saveFreq = new int[6];
-			for(Monster m : refMonsterList)
-			{
-				if(m.hasInfo && m.cr<i*5 && (i==1 ? m.cr >= -10 : m.cr > (i-1)*5))
-					for(int j = 0; j < 6; j++)
-						if(m.forceSaves[j])
-							saveFreq[j]++;
-			}
-			System.out.println("CR: " + (i-1)*5 + "-" + (i*5));
-
-			//		System.out.println("Str: "+saveFreq[0]);
-			//		System.out.println("Dex: "+saveFreq[1]);
-			//		System.out.println("Con: "+saveFreq[2]);
-			//		System.out.println("Int: "+saveFreq[3]);
-			//		System.out.println("Wis: "+saveFreq[4]);
-			//		System.out.println("Cha: "+saveFreq[5]);
-
-			System.out.println("Fort: " + (saveFreq[0]+saveFreq[2]));
-			System.out.println("Refl: " + (saveFreq[1]));
-			System.out.println("Will: " + (saveFreq[3]+saveFreq[4]/*+saveFreq[5]*/));
-		}
+		System.out.println("Will: " + (allSaveFreq[3]+allSaveFreq[4]+allSaveFreq[5]));
+//		for(int i = 1; i <= 6; i++)
+//		{
+//			int[] saveFreq = new int[6];
+//			for(Monster m : refMonsterList)
+//			{
+//				if(m.hasInfo && m.cr<i*5 && (i==1 ? m.cr >= -10 : m.cr > (i-1)*5))
+//					for(int j = 0; j < 6; j++)
+//						if(m.forceSaves[j])
+//							saveFreq[j]++;
+//			}
+//			System.out.println("CR: " + (i-1)*5 + "-" + (i*5));
+//
+//			//		System.out.println("Str: "+saveFreq[0]);
+//			//		System.out.println("Dex: "+saveFreq[1]);
+//			//		System.out.println("Con: "+saveFreq[2]);
+//			//		System.out.println("Int: "+saveFreq[3]);
+//			//		System.out.println("Wis: "+saveFreq[4]);
+//			//		System.out.println("Cha: "+saveFreq[5]);
+//
+//			System.out.println("Fort: " + (saveFreq[0]+saveFreq[2]));
+//			System.out.println("Refl: " + (saveFreq[1]));
+//			System.out.println("Will: " + (saveFreq[3]+saveFreq[4]/*+saveFreq[5]*/));
+//		}
 		
 		for(Monster m:testMonsterList)
 		{
 			for(Spell s : m.spellList)
 			{
-				if(s.level.getContentInt()==9)
-					System.out.println(m.name + ": " + s.name.getContentString());
+				if(s.level.getContentInt()==9) {}
+					//System.out.println(m.name + ": " + s.name.getContentString());
 			}
 		}
 
