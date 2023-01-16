@@ -42,37 +42,80 @@ public class Spellbase
 		//{}
 		List<Spell> outList = new ArrayList<Spell>();
 		//List<Spell> outList = new ArrayList<Spell>(spellList);
-		outList.addAll(masterSpellList);
+		//outList.addAll(masterSpellList);
 
 		//outList = addAllIndex(outList,new IndexedItem(Class.Cleric,IndexKind.SpellClass));
 		//outList = addAllIndex(outList,new IndexedItem(Class.Bard,IndexKind.SpellClass));
 		//outList = addAllIndex(outList,new IndexedItem("1 Reaction",IndexKind.SpellCastingTime));
-		outList = subAllButIndex(outList,new IndexedItem("1 Action",IndexKind.SpellCastingTime));
-		outList = subAllButIndex(outList,new IndexedItem("Instantaneous",IndexKind.SpellDuration));
+		//outList = subAllButIndex(outList,new IndexedItem("1 Action",IndexKind.SpellCastingTime));
+		//outList = subAllButIndex(outList,new IndexedItem("Instantaneous",IndexKind.SpellDuration));
 		//outList = addAllIndex(outList,new IndexedItem(true,IndexKind.SpellIsConcentration));
 		Collections.sort(outList);
 		printSpells(outList);
+		
+		int[] saveFreq = new int[6];
+		for(Spell s:masterSpellList)
+		{
+			switch(s.attackSave.substring(0,3))
+			{
+			case "STR":
+				saveFreq[0]++;
+				break;
+			case "DEX":
+				saveFreq[1]++;
+				break;
+			case "CON":
+				saveFreq[2]++;
+				break;
+			case "INT":
+				saveFreq[3]++;
+				break;
+			case "WIS":
+				saveFreq[4]++;
+				break;
+			case "CHA":
+				saveFreq[5]++;
+				break;
+			}
+		}
+		System.out.println("Str: "+saveFreq[0]);
+		System.out.println("Dex: "+saveFreq[1]);
+		System.out.println("Con: "+saveFreq[2]);
+		System.out.println("Int: "+saveFreq[3]);
+		System.out.println("Wis: "+saveFreq[4]);
+		System.out.println("Cha: "+saveFreq[5]);
 		
 	}
 	
 	public static List<Spell> getMasterSpellList()
 	{
-		List<Spell> sentSpellList = new ArrayList<Spell>();
-		input = new Scanner(System.in);
-		//System.out.println("Read New Data? (y/n)");
-		if(/*input.nextLine().equals("y")*/true)
+		if(masterSpellList == null)
 		{
-			for(int i = 1; i <= NUM_PAGES; i++)
+			masterSpellList = new ArrayList<Spell>();
+			input = new Scanner(System.in);
+		//System.out.println("Read New Data? (y/n)");
+			if(/*input.nextLine().equals("y")*/true)
 			{
-				extractSpells(i,sentSpellList);
+				for(int i = 1; i <= NUM_PAGES; i++)
+				{
+					extractSpells(i,masterSpellList);
+				}
+			}
+			else
+			{
+				masterSpellList=readFromFile();
 			}
 		}
-		else
-		{
-			sentSpellList=readFromFile();
-		}
+		return masterSpellList;
+	}
+	
+	public static boolean[] getContainsSaves()
+	{
+		boolean[] hasSaves = new boolean[6];
 		
-		return sentSpellList;
+		
+		
+		return hasSaves;
 	}
 
 //	public static boolean ioLoop(List<Spell> spellList) {

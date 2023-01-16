@@ -75,8 +75,26 @@ public class Monsterbase
 		{
 			avgAC[i] = avgAC[i]/crCount[i];
 			avgToHit[i] = avgToHit[i]/crCount[i];
-			System.out.println(avgAC[i]-avgToHit[i]);
+			//System.out.println(avgAC[i]-avgToHit[i]);
 		}
+		int[] saveFreq = new int[6];
+		for(Monster m : refMonsterList)
+		{
+			if(m.hasInfo)
+				for(int i = 0; i < 6; i++)
+					if(m.forceSaves[i])
+						saveFreq[i]++;
+		}
+		System.out.println("Str: "+saveFreq[0]);
+		System.out.println("Dex: "+saveFreq[1]);
+		System.out.println("Con: "+saveFreq[2]);
+		System.out.println("Int: "+saveFreq[3]);
+		System.out.println("Wis: "+saveFreq[4]);
+		System.out.println("Cha: "+saveFreq[5]);
+		
+		System.out.println("Fort: " + (saveFreq[0]+saveFreq[2]));
+		System.out.println("Refl: " + (saveFreq[1]));
+		System.out.println("Will: " + (saveFreq[3]+saveFreq[4]+saveFreq[5]));
 		
 		//monsterList = addToList(monsterList,"Type","Undead");
 		//monsterList = filterBy(monsterList,"Trim","Swarm of");

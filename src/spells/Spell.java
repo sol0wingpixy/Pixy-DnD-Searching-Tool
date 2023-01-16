@@ -24,6 +24,7 @@ public class Spell implements Serializable, Comparable<Spell>
 	public String aoeSize;//string
 	public AOEType aoeType;//enum
 	public String attackSave;//string
+	public int intSaveForced;
 	public String damageEffect;//string
 	public String text;//string
 	public IndexedItem classes;
@@ -68,6 +69,29 @@ public class Spell implements Serializable, Comparable<Spell>
 			duration = new IndexedItem(block.child(4).child(1).text(), IndexKind.SpellDuration);
 			school = School.toSchool(block.child(5).child(1).text());
 			attackSave = block.child(6).child(1).text();
+			switch(attackSave.substring(0,3))
+			{
+			case "STR":
+				intSaveForced = 0;
+				break;
+			case "DEX":
+				intSaveForced = 1;
+				break;
+			case "CON":
+				intSaveForced = 2;
+				break;
+			case "INT":
+				intSaveForced = 3;
+				break;
+			case "WIS":
+				intSaveForced = 4;
+				break;
+			case "CHA":
+				intSaveForced = 5;
+				break;
+			default:
+				intSaveForced = -1;
+			}
 			damageEffect = block.child(7).child(1).text();
 			text = el.child(0).child(2).text();
 			if (block.child(3).child(1).child(0).text().contains("*"))

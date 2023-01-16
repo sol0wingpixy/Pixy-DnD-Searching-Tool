@@ -1,6 +1,10 @@
 package monsters;
 
 import org.jsoup.nodes.*;
+
+import spells.Spell;
+import spells.Spellbase;
+
 import java.util.*;
 import java.io.*;
 import universal.*;
@@ -9,15 +13,14 @@ public class Monster implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String[] statNames = new String[] {"STR","DEX","CON","INT","WIS","CHA"};
-	public static final int[] CR_ORDER = new int[] {-10,-8,-4,-2,1,2,3,4,5,6,7,8,9,10,11,12,13,14,
-			15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30};
-	public static int indexOfCR(int cr)
-	{
-		for(int i = 0; i < CR_ORDER.length; i++)
-		{
+	public static final String[] statNames = new String[] { "STR", "DEX", "CON", "INT", "WIS", "CHA" };
+	public static final int[] CR_ORDER = new int[] { -10, -8, -4, -2, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+			16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
+
+	public static int indexOfCR(int cr) {
+		for (int i = 0; i < CR_ORDER.length; i++) {
 			int temp = CR_ORDER[i];
-			if(temp == cr)
+			if (temp == cr)
 				return i;
 		}
 		return -1;
@@ -45,25 +48,23 @@ public class Monster implements Serializable {
 	public String senses;
 	public String languages;
 	public boolean hasToHit;
-	public int toHitMod;//todo; just grabs 1st action, no spell attack or other actions
+	public int toHitMod;// todo; just grabs 1st action, no spell attack or other actions
 	public String fullText;
 	public List<String> attacks;
 	public double avgDamage;
+	public boolean[] forceSaves;
+	public List<Spell> spellList;
 
 	public Monster(Element smolInfo, Element bigInfo) {
 		String tempString;
 		int tempInt;
 
 		fullText = bigInfo.child(0).child(0).wholeText();
-
+		
 		name = smolInfo.child(2).child(0).text();
-		
-		if(name.contains("Shrub"))
-			System.out.println();
-		
+
 		tempInt = name.indexOf("Legacy This doesn't reflect the latest rules and lore. Learn More");
-		if(tempInt != -1)
-		{
+		if (tempInt != -1) {
 			name = name.substring(0, tempInt) + "(Legacy)";
 		}
 
@@ -71,21 +72,17 @@ public class Monster implements Serializable {
 		if (tempString.contains("/")) {
 			tempString = "-" + tempString.substring(2);
 		}
-		if(tempString.length()!=0)
-		{
+		if (tempString.length() != 0) {
 			cr = Integer.parseInt(tempString);
 			if (cr == 0)
 				cr = -10;
-		}
-		else
-		{
+		} else {
 			cr = 0;
-			System.out.println("CR error with "+name);
+			//System.out.println("CR error with " + name);
 		}
-		
-		type = new IndexedItem(Type.toType(smolInfo.child(3).text()),IndexKind.MonsterType);
-		try {
 
+		type = new IndexedItem(Type.toType(smolInfo.child(3).text()), IndexKind.MonsterType);
+		try {
 
 			if (bigInfo.child(0).child(0).className().equals("ddb-blocked-content")) {
 				hasInfo = false;
@@ -93,6 +90,65 @@ public class Monster implements Serializable {
 				source = bigInfo.child(0).child(0).child(0).child(1).child(0).text();
 			} else {
 				hasInfo = true;
+				
+				spellList = new ArrayList<Spell>();
+				forceSaves = new boolean[6];
+				tempString = bigInfo.child(0).child(0).toString();
+				tempInt = tempString.indexOf("spell-tooltip");
+				List<String> spellNames = new ArrayList<String>();
+				while(tempInt != -1)
+				{
+					tempString = tempString.substring(tempInt + 13);
+					spellNames.add(tempString.substring(tempString.indexOf('>')+1,tempString.indexOf('<')).replace("’", "'"));
+					tempInt = tempString.indexOf("spell-tooltip");
+				}
+				List<Spell> masterSpellList = Spellbase.getMasterSpellList();
+				int verifyCount = 0;
+				for(Spell s : masterSpellList)
+				{
+					for(int i = 0; i < spellNames.size(); i++)
+					{
+						if(s.name.getContentString().toLowerCase().equals(spellNames.get(i).toLowerCase()))
+						{
+							if(!this.spellList.contains(s))
+							{
+								this.spellList.add(s);
+								if(s.intSaveForced>=0)
+									forceSaves[s.intSaveForced] = true;
+							}
+							verifyCount++;
+						}
+					}
+				}
+				if(verifyCount != spellNames.size())
+				{
+					System.out.println(name + " has bad spells");
+				}
+				
+				tempString = fullText.toLowerCase();
+				tempInt = tempString.indexOf("saving throw");
+				while(tempInt!=-1)
+				{
+					if(tempInt > 14)
+					{
+						tempString = tempString.substring(tempInt - 14);
+						tempInt = tempString.indexOf("saving throw");
+						if(-1 < tempString.indexOf("strength") && tempString.indexOf("strength") < tempInt)
+							forceSaves[0]=true;
+						else if(-1 < tempString.indexOf("dexterity") && tempString.indexOf("dexterity") < tempInt)
+							forceSaves[1]=true;
+						else if(-1 < tempString.indexOf("constitution") && tempString.indexOf("constitution") < tempInt)
+							forceSaves[2]=true;
+						else if(-1 < tempString.indexOf("intelligence") && tempString.indexOf("intelligence") < tempInt)
+							forceSaves[3]=true;
+						else if(-1 < tempString.indexOf("wisdom") && tempString.indexOf("wisdom") < tempInt)
+							forceSaves[4]=true;
+						else if(-1 < tempString.indexOf("charisma") && tempString.indexOf("charisma") < tempInt)
+							forceSaves[5]=true;
+					}
+					tempString = tempString.substring(tempInt + 11);
+					tempInt = tempString.indexOf("saving throw");
+				}
 
 				source = bigInfo.child(1).child(bigInfo.child(1).childrenSize() - 1).text();
 
@@ -134,58 +190,49 @@ public class Monster implements Serializable {
 				for (int i = 0; i < bigInfo.child(0).child(0).child(4).childrenSize() - 1; i++) {
 					tidbitsParsing(bigInfo.child(0).child(0).child(4).child(i));
 				}
-				if(saves == null) {
+				if (saves == null) {
 					saves = new int[6];
-					for(int i=0; i<stats.length; i++) {
-						tempInt = stats[i]-10;
-						if(tempInt < 0)
+					for (int i = 0; i < stats.length; i++) {
+						tempInt = stats[i] - 10;
+						if (tempInt < 0)
 							tempInt--;
-						saves[i] = tempInt/2;
+						saves[i] = tempInt / 2;
 					}
 				}
 				for (int i = 0; i < bigInfo.child(0).child(0).child(6).childrenSize(); i++) {
 					if (bigInfo.child(0).child(0).child(6).child(i).child(0).text().equals("Actions")) {
 
-						//tempString = bigInfo.child(0).child(0).child(6).child(i).child(1).text();
+						// tempString = bigInfo.child(0).child(0).child(6).child(i).child(1).text();
 						Element curr = bigInfo.child(0).child(0).child(6).child(i).child(1);
-						if(name.equals("Dolgrim"))
+						if (name.equals("Dolgrim"))
 							tempInt = 0;
 						attacks = new ArrayList<String>();
-						for(Element j : curr.children())
-						{
+						for (Element j : curr.children()) {
 							attacks.add(j.text());
 						}
 						tempInt = -1;
 						int j;
-						for(j=0;j<attacks.size();j++)
-						{
-							tempInt = attacks.get(j).indexOf("+");	
-							if(tempInt != -1)
+						for (j = 0; j < attacks.size(); j++) {
+							tempInt = attacks.get(j).indexOf("+");
+							if (tempInt != -1)
 								break;
 						}
-						if(j == attacks.size())
-						{
+						if (j == attacks.size()) {
 							hasToHit = false;
-						}
-						else
-						{
-							tempString = attacks.get(j).substring(tempInt,  attacks.get(j).indexOf(" ", tempInt));
-							if(tempString.length() > 1)
-							{
+						} else {
+							tempString = attacks.get(j).substring(tempInt, attacks.get(j).indexOf(" ", tempInt));
+							if (tempString.length() > 1) {
 								toHitMod = Integer.parseInt(tempString);
 								hasToHit = true;
 								avgDamage = calcAvgDamage();
 								break;
-							}
-							else
+							} else
 								hasToHit = false;
 						}
 					}
 				}
 			}
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			System.out.println(name);
 			e.printStackTrace();
 		}
@@ -198,15 +245,15 @@ public class Monster implements Serializable {
 			String[] split = curr.child(1).text().split(",");
 			int ptr = 0;
 			int temp;
-			for(int i = 0; i<saves.length; i++) {
-				if(ptr < split.length && split[ptr].contains(Monster.statNames[i])) {
-					saves[i] = Integer.parseInt(split[ptr].substring(split[ptr].length()-1,split[ptr].length()));
+			for (int i = 0; i < saves.length; i++) {
+				if (ptr < split.length && split[ptr].contains(Monster.statNames[i])) {
+					saves[i] = Integer.parseInt(split[ptr].substring(split[ptr].length() - 1, split[ptr].length()));
 					ptr++;
 				} else {
-					temp = stats[i]-10;
-					if(temp < 0)
+					temp = stats[i] - 10;
+					if (temp < 0)
 						temp--;
-					saves[i] = temp/2;
+					saves[i] = temp / 2;
 				}
 			}
 			break;
@@ -234,28 +281,24 @@ public class Monster implements Serializable {
 			System.out.println("Add this to Monster.java: " + curr.child(0).text() + ", from: " + name);
 		}
 	}
-	
-	public String toString()
-	{
-		return name + " (CR:" + cr + ", HP:" + Monsterbase.convertHP(this) + ", DPRtoHit: " + Monsterbase.avgDmgToHit(this) + ")\n";
+
+	public String toString() {
+		return name + " (CR:" + cr + ", HP:" + Monsterbase.convertHP(this) + ", DPRtoHit: "
+				+ Monsterbase.avgDmgToHit(this) + ")\n";
 	}
-	
-	public boolean equals(Object o)
-	{
-		if(o instanceof Monster)
-		{
-			Monster m = (Monster)o;
+
+	public boolean equals(Object o) {
+		if (o instanceof Monster) {
+			Monster m = (Monster) o;
 			return this.name.equals(m.name);
 		}
-		
-			return o.equals(this);
-		
+
+		return o.equals(this);
+
 	}
-	
-	public Integer sizeNumber()
-	{
-		switch(size)
-		{
+
+	public Integer sizeNumber() {
+		switch (size) {
 		case "Tiny":
 			return 1;
 		case "Small":
@@ -273,29 +316,24 @@ public class Monster implements Serializable {
 		}
 	}
 
-	public double calcAvgDamage()
-	{
+	public double calcAvgDamage() {
 		String first = attacks.get(0);
-		if(name.equals("Chimera"))
+		if (name.equals("Chimera"))
 			first = first;
 
-		if(first.contains("Multiattack"))
-		{
+		if (first.contains("Multiattack")) {
 			int index = first.indexOf("two");
 			int offset = 4;
 			int mult = 2;
-			if(index ==-1)
-			{
+			if (index == -1) {
 				index = first.indexOf("three");
 				offset = 6;
 				mult = 3;
-				if(index ==-1)
-				{
+				if (index == -1) {
 					index = first.indexOf("four");
 					offset = 5;
 					mult = 4;
-					if(index ==-1)
-					{
+					if (index == -1) {
 						index = first.indexOf("five");
 						offset = 5;
 						mult = 5;
@@ -303,173 +341,138 @@ public class Monster implements Serializable {
 				}
 			}
 
-			int nextIndex = first.indexOf(" ",index+offset);
-			if(nextIndex < 0)
-			{
-				if(first.substring(index+offset).equals("attacks."))
-				{
+			int nextIndex = first.indexOf(" ", index + offset);
+			if (nextIndex < 0) {
+				if (first.substring(index + offset).equals("attacks.")) {
 					int attacksLeft = mult;
 					int attackIndex = 1;
 					double damageTotal = 0;
-					while(attacksLeft > 0)
-					{
+					while (attacksLeft > 0) {
 						damageTotal += calcDamage(attacks.get(attackIndex++));
-						if(attackIndex == attacks.size())
+						if (attackIndex == attacks.size())
 							attackIndex = 1;
 						attacksLeft--;
 					}
 					return damageTotal;
-				}
-				else
-				{
+				} else {
 					System.out.println();
 					return -1;
 				}
 			}
-			String name = first.substring(index+offset,nextIndex);
-			if(name.equals("attacks:"))
-			{
+			String name = first.substring(index + offset, nextIndex);
+			if (name.equals("attacks:")) {
 				String[] split = first.split(" with its ");
 				String[] fullSplit = first.split(" with its ");
 				double totalDamage = 0;
-				for(int i = 1; i < split.length; i++)
-				{
-					//TODO, reference previous element. At the end there will be a number word
-					//it indicates how many attacks are made i.e. "one] with its [claws."
+				for (int i = 1; i < split.length; i++) {
+					// TODO, reference previous element. At the end there will be a number word
+					// it indicates how many attacks are made i.e. "one] with its [claws."
 					int splitIndex = split[i].length();
-					if(split[i].indexOf('.') != -1)
+					if (split[i].indexOf('.') != -1)
 						splitIndex = Math.min(splitIndex, split[i].indexOf('.'));
-					if(split[i].indexOf(',') != -1)
+					if (split[i].indexOf(',') != -1)
 						splitIndex = Math.min(splitIndex, split[i].indexOf(','));
-					if(split[i].indexOf(' ') != -1)
+					if (split[i].indexOf(' ') != -1)
 						splitIndex = Math.min(splitIndex, split[i].indexOf(' '));
 
-					split[i] = split[i].substring(0,splitIndex);
+					split[i] = split[i].substring(0, splitIndex);
 
-					for(int j = 1; j < attacks.size(); j++)
-					{
-						if(attacks.get(j).toLowerCase().startsWith(split[i].toLowerCase()))
-						{
-							if(i == attacks.size())
+					for (int j = 1; j < attacks.size(); j++) {
+						if (attacks.get(j).toLowerCase().startsWith(split[i].toLowerCase())) {
+							if (i == attacks.size())
 								break;
 							double temp = calcDamage(attacks.get(i));
-							if(fullSplit[i-1].endsWith("one"))
+							if (fullSplit[i - 1].endsWith("one"))
 								totalDamage += temp;
-							else if (fullSplit[i-1].endsWith("two"))
-								totalDamage += temp*2;
-							else if (fullSplit[i-1].endsWith("three"))
-								totalDamage += temp*3;
-							else if (fullSplit[i-1].endsWith("four"))
-								totalDamage += temp*4;
+							else if (fullSplit[i - 1].endsWith("two"))
+								totalDamage += temp * 2;
+							else if (fullSplit[i - 1].endsWith("three"))
+								totalDamage += temp * 3;
+							else if (fullSplit[i - 1].endsWith("four"))
+								totalDamage += temp * 4;
 						}
 					}
 				}
-				if(mult == 5)
-					System.out.println(this.name + " ; "+totalDamage);
+				if (mult == 5)
+					System.out.println(this.name + " ; " + totalDamage);
 				return totalDamage;
-			}
-			else
-			{
-				for(int i = 1; i < attacks.size(); i++)
-				{
-					if(attacks.get(i).toLowerCase().startsWith(name.toLowerCase()))
-					{
-						return calcDamage(attacks.get(i))*mult;
+			} else {
+				for (int i = 1; i < attacks.size(); i++) {
+					if (attacks.get(i).toLowerCase().startsWith(name.toLowerCase())) {
+						return calcDamage(attacks.get(i)) * mult;
 					}
 				}
 				return -1;
 			}
-		}
-		else
-		{
+		} else {
 			return calcDamage(attacks.get(0));
 		}
 	}
 
-	public double calcDamage(String attack)
-	{
-		if(name.equals("Giant Poisonous Snake"))
+	public double calcDamage(String attack) {
+		if (name.equals("Giant Poisonous Snake"))
 			attack = attack;
 		List<String> damageStrings = getInParen(attack);
 		double total = 0;
 		int index;
-		if(damageStrings.size()==0)
-		{
+		if (damageStrings.size() == 0) {
 			index = attack.indexOf("poison");
-			if(index == -1)
+			if (index == -1)
 				index = attack.indexOf("slashing");
-			if(index == -1)
+			if (index == -1)
 				index = attack.indexOf("bludgeoning");
-			if(index == -1)
+			if (index == -1)
 				index = attack.indexOf("piercing");
-			if(index == -1)
+			if (index == -1)
 				index = attack.indexOf("force");
-			if(index == -1)
+			if (index == -1)
 				return -1;
 			index--;
 			do {
 				index--;
-			} while (attack.charAt(index)!=' ');
+			} while (attack.charAt(index) != ' ');
 			index++;
-			String offDamage = attack.substring(index,attack.indexOf(' ',index));
-			if(offDamage.matches("[0-9]+"))
+			String offDamage = attack.substring(index, attack.indexOf(' ', index));
+			if (offDamage.matches("[0-9]+"))
 				total += Integer.parseInt(offDamage);
-		}
-		else
-		{
+		} else {
 			boolean posMod = true;
-			for(int j = 0; j < damageStrings.size(); j++)
-			{
-				String s = damageStrings.get(j).replace("plus","+");
+			for (int j = 0; j < damageStrings.size(); j++) {
+				String s = damageStrings.get(j).replace("plus", "+");
 				String[] split;
-				if(s.contains("+"))
-				{
+				if (s.contains("+")) {
 					split = s.split("\\+");
-				}
-				else
-				{
-					if(s.contains("−"))
-					{
+				} else {
+					if (s.contains("−")) {
 						split = s.split("\\−");
 						posMod = false;
-					}
-					else
-					{
-						if(s.contains("-"))
-						{
+					} else {
+						if (s.contains("-")) {
 							split = s.split("\\-");
 							posMod = false;
-						}
-						else
-						{
-							if(s.contains("–"))
-							{
+						} else {
+							if (s.contains("–")) {
 								split = s.split("\\–");
 								posMod = false;
-							}
-							else
-								split = new String[]{s};
+							} else
+								split = new String[] { s };
 						}
 					}
 				}
-				for(int i = 0; i < split.length; i++)
-				{
+				for (int i = 0; i < split.length; i++) {
 					split[i] = split[i].trim();
 					index = split[i].indexOf("d");
-					if(index!=-1 && !split[i].startsWith("d") && Character.isDigit(split[i].charAt(index-1)) && !split[i].endsWith("d") && Character.isDigit(split[i].charAt(index+1)) )
-					{
+					if (index != -1 && !split[i].startsWith("d") && Character.isDigit(split[i].charAt(index - 1))
+							&& !split[i].endsWith("d") && Character.isDigit(split[i].charAt(index + 1))) {
 						int dieNum = Integer.parseInt(split[i].split("d")[0]);
 						int dieType = Integer.parseInt(split[i].split("d")[1]);
-						if(j == damageStrings.size()-1 && attack.contains("half"))
-							total += dieNum * (((double)dieType + 1) * 0.5) * 0.5;
+						if (j == damageStrings.size() - 1 && attack.contains("half"))
+							total += dieNum * (((double) dieType + 1) * 0.5) * 0.5;
 						else
-							total += dieNum * (((double)dieType + 1) * 0.5);
-					}
-					else
-					{
-						if(split[i].matches("[0-9]+"))
-						{
-							if(posMod)
+							total += dieNum * (((double) dieType + 1) * 0.5);
+					} else {
+						if (split[i].matches("[0-9]+")) {
+							if (posMod)
 								total += Integer.parseInt(split[i]);
 							else
 								total -= Integer.parseInt(split[i]);
@@ -478,20 +481,19 @@ public class Monster implements Serializable {
 				}
 			}
 		}
-		
+
 		return total;
 	}
 
-	private static List<String> getInParen(String text)
-	{
+	private static List<String> getInParen(String text) {
 		List<String> vals = new ArrayList<String>();
 		int startIndex;
 		int endIndex;
-		while(text.indexOf('(') != -1) {
+		while (text.indexOf('(') != -1) {
 			startIndex = text.indexOf('(');
 			endIndex = text.indexOf(')');
-			vals.add(text.substring(startIndex+1,endIndex));
-			text = text.substring(endIndex+1);
+			vals.add(text.substring(startIndex + 1, endIndex));
+			text = text.substring(endIndex + 1);
 		}
 		return vals;
 	}
