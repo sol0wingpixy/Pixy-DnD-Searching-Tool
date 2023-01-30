@@ -5,11 +5,14 @@ import java.util.*;
 import org.jsoup.*;
 import org.jsoup.nodes.*;
 
+import com.google.gson.*;
+
 import universal.*;
 
 public class Spellbase
 {
-	private static final String FILENAME = "SpellDatabaseSerial.txt";
+	private static final String TXTFILENAME = "SpellDatabaseSerial.txt";
+	private static final String JSONFILENAME = "SpellDatabaseAll.JSON";
 	private static final int NUM_PAGES = 27;
 	
 	private static Scanner input;
@@ -43,6 +46,8 @@ public class Spellbase
 		List<Spell> outList = new ArrayList<Spell>();
 		//List<Spell> outList = new ArrayList<Spell>(spellList);
 		//outList.addAll(masterSpellList);
+		
+		outList = addAllIndex(outList,new IndexedItem("psychic",IndexKind.SpellText));
 
 		//outList = addAllIndex(outList,new IndexedItem(Class.Cleric,IndexKind.SpellClass));
 		//outList = addAllIndex(outList,new IndexedItem(Class.Bard,IndexKind.SpellClass));
@@ -186,7 +191,7 @@ public class Spellbase
 	{
 		try
 		{
-			FileInputStream inputFile = new FileInputStream(FILENAME);
+			FileInputStream inputFile = new FileInputStream(TXTFILENAME);
 			ObjectInputStream objIn = new ObjectInputStream(inputFile);
 			List<Spell> readSpellList = (ArrayList<Spell>)objIn.readObject();
 			objIn.close();
@@ -204,10 +209,22 @@ public class Spellbase
 	{
 		try
 		{
-			FileOutputStream output = new FileOutputStream(FILENAME);
+			FileOutputStream output = new FileOutputStream(TXTFILENAME);
 			ObjectOutputStream objOut = new ObjectOutputStream(output);
 			objOut.writeObject(spellList);
 			objOut.close();
+			output.close();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+			FileOutputStream output = new FileOutputStream(JSONFILENAME);
+			PrintStream printOut = new PrintStream(output);
+			printOut.print(new Gson().toJson(spellList).toString());
+			printOut.close();
 			output.close();
 		}
 		catch(IOException e)

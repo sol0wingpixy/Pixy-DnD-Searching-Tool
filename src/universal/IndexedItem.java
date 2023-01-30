@@ -46,6 +46,8 @@ public class IndexedItem implements Serializable
 			return s.duration.getContentString().equals(this.getContentString());
 		case SpellIsConcentration:
 			return this.getContentBoolean() == s.duration.getContentString().contains("Concentration");
+		case SpellText:
+			return s.fullText.getContentString().contains(this.getContentString());
 		default:
 			return false;	
 		}

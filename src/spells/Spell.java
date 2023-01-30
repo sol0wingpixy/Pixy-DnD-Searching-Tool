@@ -26,10 +26,11 @@ public class Spell implements Serializable, Comparable<Spell>
 	public String attackSave;//string
 	public int intSaveForced;
 	public String damageEffect;//string
-	public String text;//string
+	public IndexedItem fullText;//string
 	public IndexedItem classes;
 	public Spell(String n,Element el)
 	{
+		String tempString;
 		if(ritual = n.endsWith("Ritual"))
 		{
 			n = n.substring(0, n.length()-7);
@@ -93,9 +94,10 @@ public class Spell implements Serializable, Comparable<Spell>
 				intSaveForced = -1;
 			}
 			damageEffect = block.child(7).child(1).text();
-			text = el.child(0).child(2).text();
+			fullText = new IndexedItem(el.child(0).child(2).text(),IndexKind.SpellText);
+			tempString = fullText.getContentString();
 			if (block.child(3).child(1).child(0).text().contains("*"))
-				mComponents = text.substring(text.indexOf("* - (") + 5, text.length() - 1);
+				mComponents = tempString.substring(tempString.indexOf("* - (") + 5, tempString.length() - 1);
 			List<Class> tempClasses = new ArrayList<Class>();
 			Element classPar = el.child(1).child(2);
 			if (!classPar.text().contains("Classes"))

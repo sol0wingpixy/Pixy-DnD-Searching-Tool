@@ -48,7 +48,7 @@ public class SpellPanel extends JPanel {
 		schoolText.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,10));
 		listPane.add(schoolText);
 		
-		JTextArea mainText = new JTextArea(spell.text);
+		JTextArea mainText = new JTextArea(spell.fullText.getContentString());
 		mainText.setVisible(true);
 		mainText.setLineWrap(true);
 		mainText.setWrapStyleWord(true);

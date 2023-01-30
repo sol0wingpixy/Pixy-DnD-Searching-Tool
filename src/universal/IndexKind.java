@@ -9,6 +9,7 @@ public enum IndexKind
 	SpellCastingTime,
 	SpellDuration,
 	SpellIsConcentration,
+	SpellText,
 	MonsterType,
 	MonsterCR,
 	ItemName,
