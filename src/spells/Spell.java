@@ -27,10 +27,13 @@ public class Spell implements Serializable, Comparable<Spell>
 	public int intSaveForced;
 	public String damageEffect;//string
 	public IndexedItem fullText;//string
+	public String abilityText;
+	public String higherLevelsText = "";
 	public IndexedItem classes;
 	public Spell(String n,Element el)
 	{
 		String tempString;
+		int tempInt;
 		if(ritual = n.endsWith("Ritual"))
 		{
 			n = n.substring(0, n.length()-7);
@@ -95,6 +98,26 @@ public class Spell implements Serializable, Comparable<Spell>
 			}
 			damageEffect = block.child(7).child(1).text();
 			fullText = new IndexedItem(el.child(0).child(2).text(),IndexKind.SpellText);
+			if(fullText.getContentString().contains("At Higher Levels."))
+			{
+				tempInt = fullText.getContentString().indexOf("At Higher Levels.");
+				abilityText = fullText.getContentString().substring(0,tempInt);
+				higherLevelsText = fullText.getContentString().substring(tempInt);
+				tempInt = higherLevelsText.indexOf("*");
+				if(tempInt != -1)
+				{
+					higherLevelsText = higherLevelsText.substring(0,tempInt-1);
+				}
+			}
+			else
+			{
+				abilityText = fullText.getContentString();
+				tempInt = abilityText.indexOf("*");
+				if(tempInt != -1)
+				{
+					abilityText = abilityText.substring(0,tempInt-1);
+				}
+			}
 			tempString = fullText.getContentString();
 			if (block.child(3).child(1).child(0).text().contains("*"))
 				mComponents = tempString.substring(tempString.indexOf("* - (") + 5, tempString.length() - 1);
@@ -132,6 +155,11 @@ public class Spell implements Serializable, Comparable<Spell>
 	public String toString()
 	{
 		return name.getContentString();
+	}
+	public String toCSVString()
+	{
+		return name.getContentString()+"^"+level.getContentInt()+"^"+(ritual ? 1 : 0)+"^"+school+"^"+castTime.getContentString()+"^"+range+"^"+(hasV ? "V" : "")+"^"+(hasS ? "S" : "")+"^"+(hasM ? "M" : "")+"^"+mComponents+"^"+(concentration ? 1:0)+"^"+duration.getContentString()+"^"+abilityText+"^"+higherLevelsText;            
+
 	}
 	public String outputLevel()
 	{

@@ -6,6 +6,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/rhysp/Documents/Programs/Spell-Database/jsoup-1.13.1.jar"/>
+	<classpathentry kind="lib" path="/Users/rhysmiller/Documents/Programs/Eclipse/Spell-Database/jsoup-1.13.1.jar"/>
+	<classpathentry kind="lib" path="/Users/rhysmiller/Documents/Programs/Eclipse/Spell-Database/gson-2.10.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

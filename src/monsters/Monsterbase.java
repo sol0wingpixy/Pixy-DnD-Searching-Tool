@@ -42,6 +42,7 @@ public class Monsterbase
 		}
 
 		List<Monster> monsterList = new ArrayList<Monster>(); 
+		monsterList.addAll(refMonsterList);
 
 		//monsterList = filterBy(monsterList,"hasInfo","True");
 		//monsterList = filterBy(monsterList,"Type","undead");
@@ -63,7 +64,7 @@ public class Monsterbase
 		int tempIndexCR;
 		for(Monster m:monsterList)
 		{
-			if(m.hasInfo && m.hasToHit && m.cr != 0)
+			if(m.hasInfo && m.cr != 0)
 			{
 				tempIndexCR = Monster.indexOfCR(m.cr);
 				if(tempIndexCR==-1)
@@ -80,7 +81,7 @@ public class Monsterbase
 		{
 			avgAC[i] = avgAC[i]/crCount[i];
 			avgToHit[i] = avgToHit[i]/crCount[i];
-			//System.out.println(avgAC[i]-avgToHit[i]);
+			System.out.println(Monster.CR_ORDER[i] + " " + avgAC[i]);
 		}
 		
 		int[] allSaveFreq = new int[6];
@@ -228,7 +229,7 @@ public class Monsterbase
 				out += " | ConAniHPBig:" + ConAniHPBig(m);
 			}
 
-			System.out.println(out);
+			//System.out.println(out);
 		}
 		System.out.println(monsterList.size() + " monsters found.");
 	}

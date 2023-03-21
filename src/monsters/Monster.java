@@ -25,6 +25,32 @@ public class Monster implements Serializable {
 		}
 		return -1;
 	}
+	public static double OrderToCr(int order)
+	{
+		if(order >= 1)
+			return (double)order;
+		if(order == -10)
+			return 0;
+		return -1.0/order;
+	}
+	
+	public static int CRtoPB(int cr) {
+		if(cr < 5)
+			return 2;
+		if(cr < 9)
+			return 3;
+		if(cr < 13)
+			return 4;
+		if(cr < 17)
+			return 5;
+		if(cr < 21)
+			return 6;
+		if(cr < 25)
+			return 7;
+		if(cr < 29)
+			return 8;
+		return 9;
+	}
 
 	public boolean hasInfo;
 	public String name;

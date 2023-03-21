@@ -13,6 +13,7 @@ public class Spellbase
 {
 	private static final String TXTFILENAME = "SpellDatabaseSerial.txt";
 	private static final String JSONFILENAME = "SpellDatabaseAll.JSON";
+	private static final String CSVCONVERTNAME = "SpellDatabaseOutput.txt";
 	private static final int NUM_PAGES = 27;
 	
 	private static Scanner input;
@@ -90,6 +91,9 @@ public class Spellbase
 		System.out.println("Wis: "+saveFreq[4]);
 		System.out.println("Cha: "+saveFreq[5]);
 		
+		System.out.println("Fort: " + (saveFreq[0]+saveFreq[2]));
+		System.out.println("Refl: " + (saveFreq[1]));
+		System.out.println("Will: " + (saveFreq[3]+saveFreq[4]+saveFreq[5]));
 	}
 	
 	public static List<Spell> getMasterSpellList()
@@ -117,7 +121,6 @@ public class Spellbase
 	public static boolean[] getContainsSaves()
 	{
 		boolean[] hasSaves = new boolean[6];
-		
 		
 		
 		return hasSaves;
@@ -214,6 +217,21 @@ public class Spellbase
 			objOut.writeObject(spellList);
 			objOut.close();
 			output.close();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+			File spellFile = new File(CSVCONVERTNAME);
+			spellFile.createNewFile();
+			FileWriter spellWriter = new FileWriter(CSVCONVERTNAME);
+			for(Spell s: spellList)
+			{
+				spellWriter.write(s.toCSVString()+"\n");
+			}
+			spellWriter.close();
 		}
 		catch(IOException e)
 		{
