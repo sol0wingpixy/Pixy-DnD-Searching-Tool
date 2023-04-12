@@ -54,7 +54,7 @@ public class Monster implements Serializable {
 
 	public boolean hasInfo;
 	public String name;
-	public int cr;
+	public IndexedItem cr;
 	public IndexedItem type;
 	public String source;
 	public String size;// Enum?
@@ -67,7 +67,7 @@ public class Monster implements Serializable {
 	public int[] stats;
 	public int[] saves;
 	public String skills;// split it up
-	public String dmgVul;
+	public String dmgVul = "";
 	public String dmgRes;
 	public String dmgImm = "";
 	public String condImm = ""; // fix all these?
@@ -98,14 +98,16 @@ public class Monster implements Serializable {
 		if (tempString.contains("/")) {
 			tempString = "-" + tempString.substring(2);
 		}
+		
 		if (tempString.length() != 0) {
-			cr = Integer.parseInt(tempString);
-			if (cr == 0)
-				cr = -10;
+			tempInt = Integer.parseInt(tempString);
+			if (tempInt == 0)
+				tempInt = -10;
 		} else {
-			cr = 0;
+			tempInt = 0;
 			//System.out.println("CR error with " + name);
 		}
+		cr = new IndexedItem(new Integer(tempInt),IndexKind.MonsterCR);
 
 		type = new IndexedItem(Type.toType(smolInfo.child(3).text()), IndexKind.MonsterType);
 		try {

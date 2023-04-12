@@ -7,6 +7,7 @@ import spells.Spell;
 import universal.*;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,7 +45,7 @@ public class Monsterbase
 		List<Monster> monsterList = new ArrayList<Monster>(); 
 		monsterList.addAll(refMonsterList);
 
-		//monsterList = filterBy(monsterList,"hasInfo","True");
+		monsterList = filterBy(monsterList,"hasInfo","True");
 		//monsterList = filterBy(monsterList,"Type","undead");
 		//monsterList = filterBy(monsterList,"Subtype","devil");
 		//monsterList = addAllIndex(monsterList,IndexedItem.TypeBeast);
@@ -64,16 +65,16 @@ public class Monsterbase
 		int tempIndexCR;
 		for(Monster m:monsterList)
 		{
-			if(m.hasInfo && m.cr != 0)
+			if(m.hasInfo && m.cr.getContentInt() != 0)
 			{
-				tempIndexCR = Monster.indexOfCR(m.cr);
+				tempIndexCR = Monster.indexOfCR(m.cr.getContentInt());
 				if(tempIndexCR==-1)
 					System.out.println(m.name);
 				avgAC[tempIndexCR] += m.ac;
 				avgToHit[tempIndexCR] += m.toHitMod;
 				crCount[tempIndexCR]++;
 			}
-			if(m.cr==0)
+			if(m.cr.getContentInt()==0)
 				System.out.println(m.name);
 		}
 		
@@ -139,7 +140,7 @@ public class Monsterbase
 		//monsterList = filterBy(monsterList,"Trim","Swarm of");
 		//monsterList = filterBy(monsterList,"CR","0 2");
 		//masterMonsterList = filterBy(masterMonsterList,"Search","Damage Transfer");
-		//monsterList = filterBy(monsterList,"Search","fly");
+		monsterList = filterBy(monsterList,"Search","spellcasting");
 		//monsterList = filterBy(monsterList,"SearchConditionImmunities","stunned");
 
 		//monsterList = invertSearch(monsterList,refMonsterList);
@@ -155,7 +156,15 @@ public class Monsterbase
 		//monsterList = sortBy(monsterList, "HPACMA","Dec");
 		//monsterList = sortBy(monsterList, "HP","Dec");
 		//monsterList = sortBy(monsterList,"HP","Dec");
-		//monsterList = sortByOrder(monsterList,SortOrder.CR_ASC);
+		//monsterList = sortBy(monsterList,"HP","Dec");
+		try
+		{
+			monsterList = sortByOrder(monsterList,IndexKind.MonsterType,false);
+		} catch (IllegalArgumentException | IllegalAccessException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//monsterList = sortBy(monsterList,"ConSave","Dec");
 		//monsterList = sortBy(monsterList,"AC","Dec");
 		//monsterList = sortBy(monsterList,"HPSaves","Dec");
@@ -229,7 +238,7 @@ public class Monsterbase
 				out += " | ConAniHPBig:" + ConAniHPBig(m);
 			}
 
-			//System.out.println(out);
+			System.out.println(out);
 		}
 		System.out.println(monsterList.size() + " monsters found.");
 	}
@@ -246,9 +255,25 @@ public class Monsterbase
 		return temp;
 	}
 
-	private static List<Monster> sortByOrder(List<Monster> monsterList, SortOrder s)
+	private static List<Monster> sortByOrder(List<Monster> monsterList, IndexKind k, boolean isAsc) throws IllegalArgumentException, IllegalAccessException
 	{
-
+		Field tempField = null;
+		Monster m = monsterList.get(0);
+		Class cls = m.getClass();
+		Field[] fields = cls.getDeclaredFields();
+		for(Field f : fields)
+		{
+			if(f.getGenericType().equals(IndexedItem.class))
+			{
+					IndexedItem i =(IndexedItem) f.get(m);
+					if(i.indexKind == k)
+						tempField = f;
+			}
+		}
+		Field targetedField = tempField;
+		System.out.println(monsterList.get(3));
+		monsterList.sort(
+				(Monster m1, Monster m2) -> IndexedItem.compareMonsters(k, m1, m2, targetedField, isAsc));
 		return monsterList;
 	}
 
@@ -422,7 +447,7 @@ public class Monsterbase
 
 	public static Double convertAvgDmg(Monster m)
 	{
-		int cr = m.cr;
+		int cr = m.cr.getContentInt();
 		double dmg = m.avgDamage;
 		double tempCR = cr;
 		if (tempCR < 0)
@@ -434,7 +459,7 @@ public class Monsterbase
 
 	public static Integer convertHP(Monster m)
 	{
-		int cr = m.cr;
+		int cr = m.cr.getContentInt();
 		int hp = m.hp;
 		double tempCR = cr;
 		if (tempCR < 0)
@@ -472,7 +497,7 @@ public class Monsterbase
 		case "CR":
 			String[] temp = filter.split(" ");
 			int[] minAndMax = {Integer.parseInt(temp[0]),Integer.parseInt(temp[1])};
-			monsterList = monsterList.stream().filter(m -> m.cr >= minAndMax[0] && m.cr <= minAndMax[1]).collect(Collectors.toList());
+			monsterList = monsterList.stream().filter(m -> m.cr.getContentInt() >= minAndMax[0] && m.cr.getContentInt() <= minAndMax[1]).collect(Collectors.toList());
 			return monsterList;
 		case "Trim":
 			monsterList = monsterList.stream().filter(m -> !m.name.contains(filter)).collect(Collectors.toList());
@@ -488,6 +513,9 @@ public class Monsterbase
 			return monsterList;
 		case "SearchImmunities":
 			monsterList = monsterList.stream().filter(m -> m.dmgImm.toLowerCase().contains(filter.toLowerCase())).collect(Collectors.toList());
+			return monsterList;
+		case "SearchVulnerabilities":
+			monsterList = monsterList.stream().filter(m -> m.dmgVul.toLowerCase().contains(filter.toLowerCase())).collect(Collectors.toList());
 			return monsterList;
 		case "SearchConditionImmunities":
 			monsterList = monsterList.stream().filter(m -> m.condImm.toLowerCase().contains(filter.toLowerCase())).collect(Collectors.toList());
@@ -505,7 +533,7 @@ public class Monsterbase
 		int count = 0;
 		for(int i=0; i<monsterList.size(); i++)
 		{
-			if(monsterList.get(i).hasInfo && monsterList.get(i).cr >= crMin && monsterList.get(i).cr <= crMax) {
+			if(monsterList.get(i).hasInfo && monsterList.get(i).cr.getContentInt() >= crMin && monsterList.get(i).cr.getContentInt() <= crMax) {
 				for(int j=0;j<6;j++)
 				{
 					avgSaves[j] += monsterList.get(i).saves[j];
@@ -528,7 +556,7 @@ public class Monsterbase
 		int count = 0;
 		for(int i=0; i<monsterList.size(); i++)
 		{
-			if(monsterList.get(i).hasInfo && monsterList.get(i).cr >= crMin && monsterList.get(i).cr <= crMax) {
+			if(monsterList.get(i).hasInfo && monsterList.get(i).cr.getContentInt() >= crMin && monsterList.get(i).cr.getContentInt() <= crMax) {
 				avgAC += monsterList.get(i).ac;
 				count++;
 			}

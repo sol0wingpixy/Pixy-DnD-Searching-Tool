@@ -1,6 +1,7 @@
 package universal;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.*;
 
 import spells.*;
@@ -11,9 +12,50 @@ import monsters.Type;
 
 import items.*;
 
-public class IndexedItem implements Serializable
+public class IndexedItem implements Serializable, Comparable<IndexedItem>
 {
 	private static final long serialVersionUID = 1L;
+	
+	public static int compareMonsters(IndexKind k, Monster m1, Monster m2, Field targetedField, boolean isAsc)
+	{
+		switch(k)
+		{
+		case MonsterCR:
+			int i1 = 0;
+			int i2 = 0;
+			try
+			{
+				i1 = ((IndexedItem)targetedField.get(m1)).getContentInt();
+				i2 = ((IndexedItem)targetedField.get(m2)).getContentInt();
+			} catch (IllegalArgumentException | IllegalAccessException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(isAsc)
+				return i1-i2;
+			else
+				return i2-i1;
+		case MonsterType:
+			String s1 = "";
+			String s2 = "";
+			try
+			{
+				s1 = ((IndexedItem)targetedField.get(m1)).getContentType().name();
+				s2 = ((IndexedItem)targetedField.get(m2)).getContentType().name();
+			} catch (IllegalArgumentException | IllegalAccessException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(isAsc)
+				return s1.compareTo(s2);
+			else
+				return s2.compareTo(s1);
+		default:
+			return 0;
+		}
+	}
 	
 	public Object content;
 	public IndexKind indexKind;
@@ -28,7 +70,6 @@ public class IndexedItem implements Serializable
 	{
 		return this.content.equals(i.content);
 	}
-
 	
 	public boolean hasIndex(Spell s)
 	{
@@ -71,6 +112,18 @@ public class IndexedItem implements Serializable
 		default:
 			return false;
 		}
+	}
+	
+	public int compareTo(IndexedItem o)
+	{
+		if(this.getClass().equals(o.getClass()))
+		{
+			if(this.indexKind == IndexKind.MonsterCR)
+			{
+				return this.getContentInt()-o.getContentInt();
+			}
+		}
+		return 0;
 	}
 	
 	public boolean getContentBoolean()
@@ -184,4 +237,6 @@ public class IndexedItem implements Serializable
 	{
 		return new IndexedItem(i,IndexKind.MonsterCR);
 	}
+
+
 }
