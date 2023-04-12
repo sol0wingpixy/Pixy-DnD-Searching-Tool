@@ -57,6 +57,16 @@ public class IndexedItem implements Serializable, Comparable<IndexedItem>
 		}
 	}
 	
+	public static String outputMonsters(List<IndexKind> outputVars, Monster m)
+	{
+		String out = "- "+m.name;
+		if(outputVars.contains(IndexKind.MonsterType))
+			out += " | " + m.type.getContentType().name();
+		if(outputVars.contains(IndexKind.MonsterCR))
+			out += " | CR:" + m.cr.getContentInt();
+		return out;
+	}
+	
 	public Object content;
 	public IndexKind indexKind;
 	

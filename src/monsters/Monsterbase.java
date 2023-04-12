@@ -14,16 +14,16 @@ import java.util.stream.Collectors;
 public class Monsterbase
 {
 	private static final String FILENAME = "MonsterDatabaseSerial.txt";
-
-	private static List<IndexedItem> outputVars;
-
-	private static List<Monster> refMonsterList;
-
-	private static Scanner input;
 	private static final int BASECR = 2;
 	private static final int BASEAC = 14;
 	private static final boolean MAGE_ARMOR = true;
 
+	private static List<IndexKind> outputVars;
+
+	private static List<Monster> refMonsterList;
+
+	private static Scanner input;
+	
 	public static void main(String[] args)
 	{
 		refMonsterList = new ArrayList<Monster>();
@@ -50,7 +50,7 @@ public class Monsterbase
 		//monsterList = filterBy(monsterList,"Subtype","devil");
 		//monsterList = addAllIndex(monsterList,IndexedItem.TypeBeast);
 
-		outputVars = new ArrayList<IndexedItem>();
+		outputVars = new ArrayList<IndexKind>();
 
 		//outputToFile(monsterList);
 
@@ -93,12 +93,12 @@ public class Monsterbase
 					if(m.forceSaves[j])
 						allSaveFreq[j]++;
 		}
-				System.out.println("Str: "+allSaveFreq[0]);
-				System.out.println("Dex: "+allSaveFreq[1]);
-				System.out.println("Con: "+allSaveFreq[2]);
-				System.out.println("Int: "+allSaveFreq[3]);
-				System.out.println("Wis: "+allSaveFreq[4]);
-				System.out.println("Cha: "+allSaveFreq[5]);
+		System.out.println("Str: "+allSaveFreq[0]);
+		System.out.println("Dex: "+allSaveFreq[1]);
+		System.out.println("Con: "+allSaveFreq[2]);
+		System.out.println("Int: "+allSaveFreq[3]);
+		System.out.println("Wis: "+allSaveFreq[4]);
+		System.out.println("Cha: "+allSaveFreq[5]);
 
 		System.out.println("Fort: " + (allSaveFreq[0]+allSaveFreq[2]));
 		System.out.println("Refl: " + (allSaveFreq[1]));
@@ -159,7 +159,8 @@ public class Monsterbase
 		//monsterList = sortBy(monsterList,"HP","Dec");
 		try
 		{
-			monsterList = sortByOrder(monsterList,IndexKind.MonsterType,false);
+			monsterList = sortByOrder(monsterList,IndexKind.MonsterType,true);
+			monsterList = sortByOrder(monsterList,IndexKind.MonsterCR,false);
 		} catch (IllegalArgumentException | IllegalAccessException e)
 		{
 			// TODO Auto-generated catch block
@@ -176,69 +177,7 @@ public class Monsterbase
 
 		for(Monster m : monsterList)
 		{
-			String out = "- "+m.name;
-			if(outputVars.contains("HP"))
-			{
-				out += " | HP:" + m.hp;
-			}
-			if(outputVars.contains("AC"))
-			{
-				out += " | AC:" + m.ac;
-			}
-			if(outputVars.contains("ConAniHP"))
-			{
-				out += " | ConAniHP:" + convertHP(m);
-			}
-			if(outputVars.contains("HPSaves"))
-			{
-				out += " | HPSaves:" + convertHP(m);
-			}
-			if(outputVars.contains("HPAC"))
-			{
-				out += " | HPAC:" + avgHPAC(m);
-			}
-			if(outputVars.contains("HPACMA"))
-			{
-				out += " | HPACMA:" + avgHPACMA(m);
-			}
-			if(outputVars.contains("ConSave"))
-			{
-				out += " | Con Save:" + m.saves[2];
-			}
-			if(outputVars.contains("toHit"))
-			{
-				out += " | toHit:" + m.toHitMod;
-			}
-			if(outputVars.contains("AvgDmg"))
-			{
-				out += " | AvgDmg:" + m.avgDamage;
-			}
-			if(outputVars.contains("CR"))
-			{
-				out += " | CR:" + m.cr;
-			}
-			if(outputVars.contains("Size"))
-			{
-				out += " | Size:" + m.size;
-			}
-			if(outputVars.contains("AvgDmgAdj"))
-			{
-				out += " | AvgDmgAdj:" + convertAvgDmg(m);
-			}
-			if(outputVars.contains("AvgDmgToHit"))
-			{
-				out += " | AvgDmgToHit:" + convertAvgDmg(m);
-			}
-			if(outputVars.contains("Hybrid"))
-			{
-				out += " | HybridAvg:" + HybridAvg(m);
-			}
-			if(outputVars.contains("ConAniHPBig"))
-			{
-				out += " | ConAniHPBig:" + ConAniHPBig(m);
-			}
-
-			System.out.println(out);
+			System.out.println(IndexedItem.outputMonsters(outputVars, m));
 		}
 		System.out.println(monsterList.size() + " monsters found.");
 	}
@@ -271,9 +210,10 @@ public class Monsterbase
 			}
 		}
 		Field targetedField = tempField;
-		System.out.println(monsterList.get(3));
+		
 		monsterList.sort(
 				(Monster m1, Monster m2) -> IndexedItem.compareMonsters(k, m1, m2, targetedField, isAsc));
+		outputVars.add(k);
 		return monsterList;
 	}
 
