@@ -59,7 +59,7 @@ public class Monster implements Serializable {
 	public String source;
 	public String size;// Enum?
 	public String subtype = "";
-	public int ac;
+	public IndexedItem ac;
 	public int hp;
 	public int hdCount;
 	public int hdSize;
@@ -194,7 +194,7 @@ public class Monster implements Serializable {
 				if (tempString.indexOf(" ") != -1) {
 					tempString = tempString.substring(0, tempString.indexOf(" "));
 				}
-				ac = Integer.parseInt(tempString);
+				ac = new IndexedItem(Integer.parseInt(tempString),IndexKind.MonsterAC);
 
 				hp = Integer.parseInt(bigInfo.child(0).child(0).child(2).child(1).child(1).child(0).text());
 

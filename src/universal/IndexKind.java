@@ -12,6 +12,7 @@ public enum IndexKind
 	SpellText,
 	MonsterType,
 	MonsterCR,
+	MonsterAC,
 	ItemName,
 	ItemAttunement,
 	ItemRarity;

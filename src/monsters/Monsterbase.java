@@ -70,7 +70,7 @@ public class Monsterbase
 				tempIndexCR = Monster.indexOfCR(m.cr.getContentInt());
 				if(tempIndexCR==-1)
 					System.out.println(m.name);
-				avgAC[tempIndexCR] += m.ac;
+				avgAC[tempIndexCR] += m.ac.getContentInt();
 				avgToHit[tempIndexCR] += m.toHitMod;
 				crCount[tempIndexCR]++;
 			}
@@ -160,6 +160,7 @@ public class Monsterbase
 		try
 		{
 			monsterList = sortByOrder(monsterList,IndexKind.MonsterType,true);
+			monsterList = sortByOrder(monsterList,IndexKind.MonsterAC,false);
 			monsterList = sortByOrder(monsterList,IndexKind.MonsterCR,false);
 		} catch (IllegalArgumentException | IllegalAccessException e)
 		{
@@ -364,20 +365,20 @@ public class Monsterbase
 	public static Double avgHPAC(Monster m)
 	{
 		double convertHP = Monsterbase.convertHP(m);
-		double ACfraction = 1 + .025*(m.ac - 10);
+		double ACfraction = 1 + .025*(m.ac.getContentInt() - 10);
 		return ACfraction * convertHP;
 	}
 
 	public static Double avgHPACMA(Monster m)
 	{
-		double ACfraction = 1 + .025*(Math.max(m.ac,13+m.stats[2]) - 10);
+		double ACfraction = 1 + .025*(Math.max(m.ac.getContentInt(),13+m.stats[2]) - 10);
 		return ACfraction * m.hp;
 	}
 
 	public static Double avgHPSaves(Monster m)
 	{
 		double convertHP = Monsterbase.convertHP(m);
-		double rollingDefense = .05*m.ac;
+		double rollingDefense = .05*m.ac.getContentInt();
 		rollingDefense += .025*m.saves[1];
 		rollingDefense += .025*m.saves[2];
 		rollingDefense += .025*m.saves[4];
@@ -497,7 +498,7 @@ public class Monsterbase
 		for(int i=0; i<monsterList.size(); i++)
 		{
 			if(monsterList.get(i).hasInfo && monsterList.get(i).cr.getContentInt() >= crMin && monsterList.get(i).cr.getContentInt() <= crMax) {
-				avgAC += monsterList.get(i).ac;
+				avgAC += monsterList.get(i).ac.getContentInt();
 				count++;
 			}
 		}

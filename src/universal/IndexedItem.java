@@ -18,11 +18,13 @@ public class IndexedItem implements Serializable, Comparable<IndexedItem>
 	
 	public static int compareMonsters(IndexKind k, Monster m1, Monster m2, Field targetedField, boolean isAsc)
 	{
+		int i1;
+		int i2;
 		switch(k)
 		{
 		case MonsterCR:
-			int i1 = 0;
-			int i2 = 0;
+			 i1 = 0;
+			 i2 = 0;
 			try
 			{
 				i1 = ((IndexedItem)targetedField.get(m1)).getContentInt();
@@ -52,6 +54,22 @@ public class IndexedItem implements Serializable, Comparable<IndexedItem>
 				return s1.compareTo(s2);
 			else
 				return s2.compareTo(s1);
+		case MonsterAC:
+			 i1 = 0;
+			 i2 = 0;
+			try
+			{
+				i1 = ((IndexedItem)targetedField.get(m1)).getContentInt();
+				i2 = ((IndexedItem)targetedField.get(m2)).getContentInt();
+			} catch (IllegalArgumentException | IllegalAccessException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(isAsc)
+				return i1-i2;
+			else
+				return i2-i1;
 		default:
 			return 0;
 		}
@@ -62,6 +80,8 @@ public class IndexedItem implements Serializable, Comparable<IndexedItem>
 		String out = "- "+m.name;
 		if(outputVars.contains(IndexKind.MonsterType))
 			out += " | " + m.type.getContentType().name();
+		if(outputVars.contains(IndexKind.MonsterAC))
+			out += " | AC:" + m.ac.getContentInt();
 		if(outputVars.contains(IndexKind.MonsterCR))
 			out += " | CR:" + m.cr.getContentInt();
 		return out;
